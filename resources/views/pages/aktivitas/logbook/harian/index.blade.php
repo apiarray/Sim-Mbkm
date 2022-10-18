@@ -130,7 +130,7 @@
                     data: 'deskripsi',
                     name: 'deskripsi',
                     searchable: true,
-                    orderable: true
+                    orderable: true,
                 },
                 {
                     data: 'action',
