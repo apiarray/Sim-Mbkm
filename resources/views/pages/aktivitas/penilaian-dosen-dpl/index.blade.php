@@ -32,6 +32,7 @@
                         <th scope="row">Laporan Akhir</th>
                         <th scope="row">Status Penilaian</th>
                         <th scope="row">Penilaian</th>
+                        <th scope="row">Skor Penilaian</th>
                         <th scope="row">Action</th>
                     </tr>
                 </x-slot>
