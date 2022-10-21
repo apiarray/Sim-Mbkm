@@ -19,21 +19,27 @@
                         <th scope="row">ID</th>
                         <th scope="row">ID Penilaian</th>
                         <th scope="row">Tgl. Penilaian</th>
-                        <th scope="row">NIM</th>
-                        <th scope="row">Nama Siswa</th>
-                        <th scope="row">Jurusan</th>
+                        @if (!auth()->guard('mahasiswa')->check())
+                            <th scope="row">NIM</th>
+                            <th scope="row">Nama Siswa</th>
+                            <th scope="row">Jurusan</th>
+                        @endif
                         @if (!auth()->guard('dosen')->check())
                             <th scope="row">Dosen</th>
                         @endif
-                        <th scope="row">Kelas</th>
-                        <th scope="row">Program</th>
+                        @if (!auth()->guard('mahasiswa')->check())
+                            <th scope="row">Kelas</th>
+                            <th scope="row">Program</th>
+                        @endif
                         <th scope="row">Tahun Ajaran</th>
                         <th scope="row">Logbook Mingguan</th>
                         <th scope="row">Laporan Akhir</th>
                         <th scope="row">Status Penilaian</th>
                         <th scope="row">Penilaian</th>
                         <th scope="row">Skor Penilaian</th>
-                        <th scope="row">Action</th>
+                        @if (!auth()->guard('mahasiswa')->check())
+                            <th scope="row">Action</th>
+                        @endif
                     </tr>
                 </x-slot>
                 <x-slot name="body">
@@ -47,6 +53,13 @@
 @endsection
 @push('datatable-scripts')
     <script>
+        @if (auth()->guard('mahasiswa')->check())
+            let hak_akses = 'Mahasiswa';
+        @elseif (auth()->guard('dosen')->check())
+            let hak_akses = 'Dosen';
+        @elseif (auth()->guard('admin')->check())
+            let hak_akses = 'Admin';
+        @endif
         $('#logbook-datatables').DataTable({
             processing: true,
             serverSide: true,
@@ -71,24 +84,24 @@
                     searchable: true,
                     orderable: true
                 },
-                {
-                    data: 'nim',
-                    name: 'mahasiswa.nim',
-                    searchable: true,
-                    orderable: true
-                },
-                {
-                    data: 'mahasiswa_nama',
-                    name: 'mahasiswa.nama',
-                    searchable: true,
-                    orderable: true
-                },
-                {
-                    data: 'jurusan_nama',
-                    name: 'jurusan.nama',
-                    searchable: true,
-                    orderable: true
-                },
+                @if (!auth()->guard('mahasiswa')->check())
+                    {
+                        data: 'nim',
+                        name: 'mahasiswa.nim',
+                        searchable: true,
+                        orderable: true
+                    }, {
+                        data: 'mahasiswa_nama',
+                        name: 'mahasiswa.nama',
+                        searchable: true,
+                        orderable: true
+                    }, {
+                        data: 'jurusan_nama',
+                        name: 'jurusan.nama',
+                        searchable: true,
+                        orderable: true
+                    },
+                @endif
                 @if (!auth()->guard('dosen')->check())
                     {
                         data: 'dosen_dpl_nama',
@@ -96,19 +109,20 @@
                         searchable: true,
                         orderable: true
                     },
+                @endif
+                @if (!auth()->guard('mahasiswa')->check())
+                    {
+                        data: 'kelas_nama',
+                        name: 'kelas.nama',
+                        searchable: true,
+                        orderable: true
+                    }, {
+                        data: 'program_nama',
+                        name: 'program.nama',
+                        searchable: true,
+                        orderable: true
+                    },
                 @endif {
-                    data: 'kelas_nama',
-                    name: 'kelas.nama',
-                    searchable: true,
-                    orderable: true
-                },
-                {
-                    data: 'program_nama',
-                    name: 'program.nama',
-                    searchable: true,
-                    orderable: true
-                },
-                {
                     data: 'tahun_ajaran',
                     name: 'tahun_ajaran.tahun_ajaran',
                     searchable: true,
@@ -168,7 +182,8 @@
                         console.log(row);
                         var html = ''
                         var valid_logbook = ((row.count_logbook_mingguan_valid == row.count_logbook_mingguan_all) && (row.count_logbook_mingguan_all > 0))
-                        if (row.status != 'tervalidasi') {
+
+                        if (row.status != 'tervalidasi' && (hak_akses == 'Admin' || hak_akses == 'Dosen')) {
                             if (valid_logbook) {
                                 html += `<x-button.button-link  text="Lakukan Penilaian" class="btn btn-warning" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" />`;
                             } else {
@@ -191,25 +206,27 @@
                         return Math.round((row / 23.8) * 10000) / 100
                     }
                 },
-                {
-                    data: 'action',
-                    name: 'action',
-                    searchable: false,
-                    orderable: false,
-                    render: function(row) {
-                        row = JSON.parse(row)
-                        console.log(row);
-                        var html = ''
-                        if (row.status == 'mengajukan' || row.status == 'revisi') {
-                            html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/edit') }}/${row.id}" />`;
-                            if (row.status == 'mengajukan') {
-                                html += `<x-button text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
-                                html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`
+                @if (!auth()->guard('mahasiswa')->check())
+                    {
+                        data: 'action',
+                        name: 'action',
+                        searchable: false,
+                        orderable: false,
+                        render: function(row) {
+                            row = JSON.parse(row)
+                            console.log(row);
+                            var html = ''
+                            if (row.status == 'mengajukan' || row.status == 'revisi') {
+                                html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/edit') }}/${row.id}" />`;
+                                if (row.status == 'mengajukan') {
+                                    html += `<x-button text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
+                                    html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`
+                                }
                             }
+                            return html
                         }
-                        return html
                     }
-                }
+                @endif
             ]
         });
     </script>

@@ -219,6 +219,12 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
 
     Route::middleware(['auth:admin,mahasiswa,dosen'])->group(function () {
         Route::prefix('aktivitas')->group(function () {
+            Route::prefix('penilaian-dosen-dpl')->group(function () {
+                Route::get('/', [PenilaianDosenDplController::class, 'index'])->name('aktivitas.penilaian_dosen_dpl.index');
+                Route::get('/list-datatable', [PenilaianDosenDplController::class, 'listPenilaianDosenDpl'])->name('aktivitas.penilaian_dosen_dpl.create');
+                Route::get('/detail/{id}', [PenilaianDosenDplController::class, 'show'])->name('aktivitas.penilaian_dosen_dpl.show');
+            });
+
             Route::prefix('laporan-akhir')->group(function () {
                 Route::prefix('mahasiswa')->group(function () {
                     Route::get('/get-by-registrasi-id/{id}', [LaporanAkhirMahasiswaController::class, 'getByRegistrasiId'])->name('aktivitas.laporan_akhir.mahasiswa.get_by_registrasi_id');
@@ -280,6 +286,18 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::delete('/destroy/{id}', [LaporanAkhirDosenDplController::class, 'destroy'])->name('aktivitas.laporan_akhir.dosen_dpl.destroy');
                 });
             });
+
+            Route::prefix('aktivitas')->group(function () {
+                Route::prefix('penilaian-dosen-dpl')->group(function () {
+                    Route::get('/create', [PenilaianDosenDplController::class, 'create'])->name('aktivitas.penilaian_dosen_dpl.create');
+                    Route::post('/store', [PenilaianDosenDplController::class, 'store'])->name('aktivitas.penilaian_dosen_dpl.store');
+                    Route::post('/penilaian/{id}', [PenilaianDosenDplController::class, 'storePenilaian'])->name('aktivitas.penilaian_dosen_dpl.store_penilaian');
+                    Route::get('/edit/{id}', [PenilaianDosenDplController::class, 'edit'])->name('aktivitas.penilaian_dosen_dpl.edit');
+                    Route::put('/update/{id}', [PenilaianDosenDplController::class, 'update'])->name('aktivitas.penilaian_dosen_dpl.update');
+                    Route::delete('/destroy/{id}', [PenilaianDosenDplController::class, 'destroy'])->name('aktivitas.penilaian_dosen_dpl.destroy');
+                    Route::post('/validate-penilaian/{id}', [PenilaianDosenDplController::class, 'validasiPenilaian'])->name('aktivitas.penilaian_dosen_dpl.validasi_penilaian');
+                });
+            });
         });
     });
 
@@ -313,23 +331,6 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     // Route::get('/get-data-laporan-akhir', [LaporanAkhirMahasiswaController::class, 'getDataLaporanAkhir'])->name('get-data-laporan-akhir');
                     // Route::get('/get-data-laporan-akhir_detail/{id}', [LaporanAkhirMahasiswaController::class, 'getDataLaporanAkhirDetail'])->name('get-data-laporan-akhir_detail');
                 });
-            });
-        });
-    });
-
-    Route::middleware(['auth:admin,dosen'])->group(function () {
-        Route::prefix('aktivitas')->group(function () {
-            Route::prefix('penilaian-dosen-dpl')->group(function () {
-                Route::get('/', [PenilaianDosenDplController::class, 'index'])->name('aktivitas.penilaian_dosen_dpl.index');
-                Route::get('/list-datatable', [PenilaianDosenDplController::class, 'listPenilaianDosenDpl'])->name('aktivitas.penilaian_dosen_dpl.create');
-                Route::get('/create', [PenilaianDosenDplController::class, 'create'])->name('aktivitas.penilaian_dosen_dpl.create');
-                Route::post('/store', [PenilaianDosenDplController::class, 'store'])->name('aktivitas.penilaian_dosen_dpl.store');
-                Route::get('/detail/{id}', [PenilaianDosenDplController::class, 'show'])->name('aktivitas.penilaian_dosen_dpl.show');
-                Route::post('/penilaian/{id}', [PenilaianDosenDplController::class, 'storePenilaian'])->name('aktivitas.penilaian_dosen_dpl.store_penilaian');
-                Route::get('/edit/{id}', [PenilaianDosenDplController::class, 'edit'])->name('aktivitas.penilaian_dosen_dpl.edit');
-                Route::put('/update/{id}', [PenilaianDosenDplController::class, 'update'])->name('aktivitas.penilaian_dosen_dpl.update');
-                Route::delete('/destroy/{id}', [PenilaianDosenDplController::class, 'destroy'])->name('aktivitas.penilaian_dosen_dpl.destroy');
-                Route::post('/validate-penilaian/{id}', [PenilaianDosenDplController::class, 'validasiPenilaian'])->name('aktivitas.penilaian_dosen_dpl.validasi_penilaian');
             });
         });
     });

@@ -64,6 +64,14 @@ class PenilaianDosenDpl extends Model
             $result = $result->get();
         }
 
+        if (auth()->guard('mahasiswa')->check()) {
+            $result->where('registrasi_mbkm.mahasiswa_id', auth()->guard('mahasiswa')->user()->id);
+        }
+
+        if (auth()->guard('dosen')->check()) {
+            $result->where('registrasi_mbkm.dosen_dpl_id', auth()->guard('dosen')->user()->id);
+        }
+
         return $result;
     }
 }

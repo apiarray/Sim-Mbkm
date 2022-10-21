@@ -89,28 +89,27 @@
                         @endif
                     </li>
 
-                    @if (auth()->guard('dosen')->check() ||
-                        auth()->guard('admin')->check())
-                        {{-- SIDEBAR DATA AKTIVITAS DOSEN --}}
-                        <li class="sidebar-main-title">
-                            <div>
-                                <h6>Aktivitas Dosen</h6>
-                                <p>Menu Aktivitas Dosen</p>
-                            </div>
-                        </li>
+                    {{-- SIDEBAR DATA AKTIVITAS DOSEN --}}
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>Aktivitas Dosen</h6>
+                            <p>Menu Aktivitas Dosen</p>
+                        </div>
+                    </li>
 
-                        <li class="sidebar-list">
-
-                            <a class="sidebar-link sidebar-title link-nav" href="{{ route('aktivitas.penilaian_dosen_dpl.index') }}">
-                                <i data-feather="clipboard"></i>
-                                <span>Penilaian Dosen DPL</span>
-                            </a>
+                    <li class="sidebar-list">
+                        <a class="sidebar-link sidebar-title link-nav" href="{{ route('aktivitas.penilaian_dosen_dpl.index') }}">
+                            <i data-feather="clipboard"></i>
+                            <span>Penilaian Dosen DPL</span>
+                        </a>
+                        @if (auth()->guard('dosen')->check() ||
+                            auth()->guard('admin')->check())
                             <a class="sidebar-link sidebar-title link-nav" href="{{ route('aktivitas.laporan_akhir.dosen_dpl.index') }}">
                                 <i data-feather="clipboard"></i>
                                 <span>Laporan Akhir Dosen DPL</span>
                             </a>
-                        </li>
-                    @endif
+                        @endif
+                    </li>
 
                     @if (auth()->guard('admin')->check())
                         {{-- SIDEBAR DATA PENGGUNA --}}
