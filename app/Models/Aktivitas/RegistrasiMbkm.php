@@ -10,6 +10,7 @@ use App\Models\Pengguna\Mahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class RegistrasiMbkm extends Model
 {
@@ -61,18 +62,31 @@ class RegistrasiMbkm extends Model
 
     public static function listRegistrasi($is_datatable = 0)
     {
-        $result = self::select('registrasi_mbkm.*', 'mahasiswa.nama as nama_mahasiswa', 'mahasiswa.nim as nim_mahasiswa', 'mahasiswa.status as status_mahasiswa',
-                'dosen_dpl.nip as nip_dosen_dpl', 'dosen_dpl.nama as nama_dosen_dpl', 'kelas.nama as kelas', 'jurusan.nama as jurusan', 'fakultas.nama as fakultas',
-                'program.nama as program', 'tahun_ajaran.tahun_ajaran', 'semester.nama as semester')
-        ->join('mahasiswa', 'mahasiswa.id', 'registrasi_mbkm.mahasiswa_id')
-        ->leftJoin('kelas', 'kelas.id', 'registrasi_mbkm.kelas_id')
-        ->leftJoin('jurusan', 'jurusan.id', 'kelas.jurusan_id')
-        ->leftJoin('fakultas', 'fakultas.id', 'jurusan.fakultas_id')
-        ->leftJoin('program', 'program.id', 'registrasi_mbkm.program_id')
-        ->join('tahun_ajaran', 'tahun_ajaran.id', 'registrasi_mbkm.tahun_ajaran_id')
-        ->join('semester', 'semester.id', 'tahun_ajaran.semester_id')
-        ->leftJoin('dosen_dpl', 'dosen_dpl.id', 'registrasi_mbkm.dosen_dpl_id')
-        ->orderBy('registrasi_mbkm.created_at', 'desc');
+        $result = self::select(
+            'registrasi_mbkm.*',
+            DB::raw("DATE_FORMAT(registrasi_mbkm.tanggal_registrasi,'%d-%m-%Y') AS ttanggal_registrasi"),
+            DB::raw("DATE_FORMAT(registrasi_mbkm.tanggal_validasi,'%d-%m-%Y') AS ttanggal_validasi"),
+            'mahasiswa.nama as nama_mahasiswa',
+            'mahasiswa.nim as nim_mahasiswa',
+            'mahasiswa.status as status_mahasiswa',
+            'dosen_dpl.nip as nip_dosen_dpl',
+            'dosen_dpl.nama as nama_dosen_dpl',
+            'kelas.nama as kelas',
+            'jurusan.nama as jurusan',
+            'fakultas.nama as fakultas',
+            'program.nama as program',
+            'tahun_ajaran.tahun_ajaran',
+            'semester.nama as semester'
+        )
+            ->join('mahasiswa', 'mahasiswa.id', 'registrasi_mbkm.mahasiswa_id')
+            ->leftJoin('kelas', 'kelas.id', 'registrasi_mbkm.kelas_id')
+            ->leftJoin('jurusan', 'jurusan.id', 'kelas.jurusan_id')
+            ->leftJoin('fakultas', 'fakultas.id', 'jurusan.fakultas_id')
+            ->leftJoin('program', 'program.id', 'registrasi_mbkm.program_id')
+            ->join('tahun_ajaran', 'tahun_ajaran.id', 'registrasi_mbkm.tahun_ajaran_id')
+            ->join('semester', 'semester.id', 'tahun_ajaran.semester_id')
+            ->leftJoin('dosen_dpl', 'dosen_dpl.id', 'registrasi_mbkm.dosen_dpl_id')
+            ->orderBy('registrasi_mbkm.created_at', 'desc');
         if (!($is_datatable == 1 || $is_datatable == true)) {
             $result = $result->get();
         }

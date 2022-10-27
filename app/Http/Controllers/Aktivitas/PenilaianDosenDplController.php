@@ -30,6 +30,9 @@ class PenilaianDosenDplController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->filterColumn('ttanggal_penilaian', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(penilaian_dosen_dpl.tanggal_penilaian,'%d-%m-%Y') like ?", ["%{$keyword}%"]);
+            })
             ->addColumn('action', function ($row) {
                 return json_encode($row);
             })

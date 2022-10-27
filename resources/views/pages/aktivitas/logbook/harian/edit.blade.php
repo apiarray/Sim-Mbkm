@@ -20,7 +20,7 @@
                     <select class="form-control" name="registrasi_mbkm_id" id="id_validasi_registrasi" onchange="getIdRegistrasiData(this)">
                         <option value="">Pilih ID Registrasi Validasi</option>
                         @foreach ($listRegistrasiMbkm as $reg)
-                            <option value="{{ $reg->id }}" {{ (old('registrasi_mbkm_id') ?? ($dataLogbookMingguan->registrasi_mbkm_id ?? null)) == $reg->id ? 'selected' : '' }}>
+                            <option value="{{ $reg->id }}" {{ (old('registrasi_mbkm_id') ?? ($dataLogbookHarian->registrasi_mbkm_id ?? null)) == $reg->id ? 'selected' : '' }}>
                                 {{ $reg->id_registrasi . ' ' . (($reg->mahasiswa->nama ?? '') != '' ? '(' . $reg->mahasiswa->nama . ')' : '') }}
                             </option>
                         @endforeach

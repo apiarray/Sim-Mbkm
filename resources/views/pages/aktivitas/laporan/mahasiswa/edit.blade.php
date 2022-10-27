@@ -126,7 +126,7 @@
                     <div class="col">
                         @if ($dataLogbookmingguan->materi_pdf)
                             <div>
-                                <a href="{{ url('storage/' . $dataLogbookmingguan->matseri_pdf) }}" target="_blank" class="btn btn-success">Dokumen ter-upload</a>
+                                <a href="{{ url('storage/' . $dataLogbookmingguan->materi_pdf) }}" target="_blank" class="btn btn-success">Dokumen ter-upload</a>
                             </div>
                         @endif
                     </div>
@@ -175,14 +175,14 @@
                     <input type="date" class="form-control" name="tanggal_laporan" placeholder="Isi Taanggal" value="{{ old('tanggal_laporan') ?? (($dataLogbookmingguan->tanggal_laporan_akhir ? \Carbon\Carbon::parse($dataLogbookmingguan->tanggal_laporan_akhir)->format('Y-m-d') : null) ?? null) }}">
                 </div>
                 <!-- <div class="col">
-                                        <label>Pilih Semester Laporan Akhir</label>
-                                        <select class="form-control" name="semester_akhir" aria-label="Default select example">
-                                            <option selected>Silakan pilih</option>
-                                            @foreach ($dataRegistrasiMbkm as $item)
+                                                    <label>Pilih Semester Laporan Akhir</label>
+                                                    <select class="form-control" name="semester_akhir" aria-label="Default select example">
+                                                        <option selected>Silakan pilih</option>
+                                                        @foreach ($dataRegistrasiMbkm as $item)
     <option value="{{ $item->id_semester }}}">{{ $item->nama_semester }}</option>
     @endforeach
-                                        </select>
-                                    </div> -->
+                                                    </select>
+                                                </div> -->
             </div>
             <div class="form-group row">
                 <x-button text="Submit" class="btn-success mr-3" type="submit" />

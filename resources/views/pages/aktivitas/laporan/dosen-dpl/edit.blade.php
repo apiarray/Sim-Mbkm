@@ -82,7 +82,7 @@
                                                 {{ $dtl->id_penilaian }}
                                             </td>
                                             <td>
-                                                {{ $dtl->tanggal_penilaian }}
+                                                {{ date('d-m-Y', strtotime($dtl->tanggal_penilaian)) }}
                                             </td>
                                             <td>
                                                 {{ $dtl->nim_mahasiswa }} - {{ $dtl->nama_mahasiswa }}

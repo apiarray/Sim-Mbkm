@@ -19,6 +19,7 @@
                         <th scope="row">ID</th>
                         <th scope="row">ID Log Book Mingguan</th>
                         <th scope="row">Minggu ke-#</th>
+                        <th scope="row">TGL Log Book Mingguan</th>
                         @if (!auth()->guard('mahasiswa')->check())
                             <th scope="row">NIM</th>
                             <th scope="row">Nama Siswa</th>
@@ -74,6 +75,12 @@
                 {
                     data: 'minggu',
                     name: 'minggu',
+                    searchable: true,
+                    orderable: true
+                },
+                {
+                    data: 'ttanggal',
+                    name: 'ttanggal',
                     searchable: true,
                     orderable: true
                 },

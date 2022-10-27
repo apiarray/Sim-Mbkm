@@ -5,6 +5,7 @@ namespace App\Models\Aktivitas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class LogbookMingguan extends Model
 {
@@ -34,6 +35,7 @@ class LogbookMingguan extends Model
     {
         $result = self::select(
             'logbook_mingguan.*',
+            DB::raw("DATE_FORMAT(logbook_mingguan.tanggal,'%d-%m-%Y') AS ttanggal"),
             'registrasi_mbkm.id_registrasi',
             'registrasi_mbkm.mahasiswa_id',
             'registrasi_mbkm.program_id',

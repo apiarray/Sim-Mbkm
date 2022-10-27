@@ -75,6 +75,12 @@ class RegistrasiMbkmController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->filterColumn('ttanggal_registrasi', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(registrasi_mbkm.tanggal_registrasi,'%d-%m-%Y') like ?", ["%{$keyword}%"]);
+            })
+            ->filterColumn('ttanggal_validasi', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(registrasi_mbkm.tanggal_validasi,'%d-%m-%Y') like ?", ["%{$keyword}%"]);
+            })
             ->addColumn('action', function ($row) {
                 return json_encode($row);
             })

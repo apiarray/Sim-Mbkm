@@ -12,7 +12,9 @@
 
     <section class="mt-5">
         <x-cards.regular-card heading="Penilaian Dosen DPL">
-            <x-button.button-link text="Add Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
+            @if (!auth()->guard('mahasiswa')->check())
+                <x-button.button-link text="Add Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
+            @endif
             <x-table id="logbook-datatables">
                 <x-slot name="header">
                     <tr>
@@ -79,8 +81,8 @@
                     orderable: true
                 },
                 {
-                    data: 'tanggal_penilaian',
-                    name: 'tanggal_penilaian',
+                    data: 'ttanggal_penilaian',
+                    name: 'ttanggal_penilaian',
                     searchable: true,
                     orderable: true
                 },

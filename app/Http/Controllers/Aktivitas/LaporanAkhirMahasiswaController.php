@@ -133,7 +133,29 @@ class LaporanAkhirMahasiswaController extends Controller
      */
     public function show($id)
     {
-        //
+        $dataRegistrasiMbkm = DB::table('registrasi_mbkm as a')
+            ->leftjoin('logbook_mingguan as b', 'a.id', '=', 'b.registrasi_mbkm_id')
+            ->leftjoin('mahasiswa as c', 'a.mahasiswa_id', '=', 'c.id')
+            ->leftjoin('tahun_ajaran as e', 'a.tahun_ajaran_id', '=', 'e.id')
+            ->leftjoin('semester as d', 'e.semester_id', '=', 'd.id')
+            ->select('a.*', 'a.id as id_registrasi_mbkm', 'b.registrasi_mbkm_id', 'b.judul', 'b.id as id_log_mingguan', 'c.nama as nama_mahasiswa', 'd.id as id_semester', 'd.nama as nama_semester', 'e.*')
+            ->where('a.status_validasi', '=', 'tervalidasi')
+            ->where('a.is_accepted', 1)
+            ->get();
+        $dataLogbookmingguan = LaporanAkhirMahasiswa::find($id);
+
+
+        $dataLogbookmingguanDetail = DB::table('logbook_mingguan as a')
+            ->join('registrasi_mbkm as c', 'c.id', 'a.registrasi_mbkm_id')
+            ->leftjoin('laporan_akhir_mahasiswa_detail as b', function ($join) use ($id) {
+                $join->on('b.id_log_book_mingguan', '=', 'a.id');
+                $join->where('b.laporan_akhir_mahasiswa_id', '=', $id);
+            })
+            ->where('a.status', '=', 'tervalidasi')
+            ->where('c.id', '=', ($dataLogbookmingguan->registrasi_mbkm_id ?? NULL))
+            ->select('a.id', 'b.id_log_book_mingguan', 'a.judul')
+            ->get();
+        return view('pages.aktivitas.laporan.mahasiswa.show', compact('dataRegistrasiMbkm', 'dataLogbookmingguan', 'dataLogbookmingguanDetail'));
     }
 
     public function validatemahasiswa(Request $request, $id)

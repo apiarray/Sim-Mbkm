@@ -34,6 +34,9 @@ class LogBookHarianController extends Controller
 
         return DataTables::of($data)
             ->addIndexColumn()
+            ->filterColumn('ttanggal', function ($query, $keyword) {
+                $query->whereRaw("DATE_FORMAT(logbook_harian.tanggal,'%d-%m-%Y') like ?", ["%{$keyword}%"]);
+            })
             ->addColumn('action', function ($row) {
                 return json_encode($row);
             })

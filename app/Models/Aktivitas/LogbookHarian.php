@@ -11,6 +11,7 @@ use App\Models\Masters\Program;
 use App\Models\Masters\TahunAjaran;
 use App\Models\Pengguna\DosenDpl;
 use App\Models\Pengguna\Mahasiswa;
+use Illuminate\Support\Facades\DB;
 
 class LogbookHarian extends Model
 {
@@ -36,6 +37,7 @@ class LogbookHarian extends Model
     {
         $result = self::select(
             'logbook_harian.*',
+            DB::raw("DATE_FORMAT(logbook_harian.tanggal,'%d-%m-%Y') AS ttanggal"),
             'registrasi_mbkm.id_registrasi',
             'registrasi_mbkm.mahasiswa_id',
             'registrasi_mbkm.program_id',

@@ -29,6 +29,7 @@ class PenilaianDosenDpl extends Model
     {
         $result = self::select(
             'penilaian_dosen_dpl.*',
+            DB::raw("DATE_FORMAT(penilaian_dosen_dpl.tanggal_penilaian,'%d-%m-%Y') AS ttanggal_penilaian"),
             'registrasi_mbkm.id_registrasi',
             'registrasi_mbkm.mahasiswa_id',
             'registrasi_mbkm.program_id',

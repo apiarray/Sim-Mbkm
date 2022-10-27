@@ -12,7 +12,7 @@
 
     @if ($errors->any())
         <x-alert type="danger" title="Error" message="
-                                                                    {!! implode('', $errors->all('<div>:message</div>')) !!}" />
+                                                                                {!! implode('', $errors->all('<div>:message</div>')) !!}" />
     @endif
 
     <section class="mt-5">
@@ -179,14 +179,14 @@
                     orderable: true
                 },
                 {
-                    data: 'tanggal_registrasi',
-                    name: 'tanggal_registrasi',
+                    data: 'ttanggal_registrasi',
+                    name: 'ttanggal_registrasi',
                     searchable: true,
                     orderable: true
                 },
                 {
-                    data: 'tanggal_validasi',
-                    name: 'tanggal_validasi',
+                    data: 'ttanggal_validasi',
+                    name: 'ttanggal_validasi',
                     searchable: true,
                     orderable: true
                 },
@@ -199,8 +199,8 @@
                         params = JSON.parse(params)
                         var html = ''
                         if (params.file_khs && params.file_krs) {
-                            html += `<a href="{{ url('storage') }}/storage/${params.file_khs}" target="_blank" class="btn btn-xs btn-success m-2">Berkas 1</a>`
-                            html += `<a href="{{ url('storage') }}/storage/${params.file_krs}" target="_blank" class="btn btn-xs btn-success m-2">Berkas 2</a>`
+                            html += `<a href="{{ url('storage') }}/${params.file_khs}" target="_blank" class="btn btn-xs btn-success m-2">Berkas 1</a>`
+                            html += `<a href="{{ url('storage') }}/${params.file_krs}" target="_blank" class="btn btn-xs btn-success m-2">Berkas 2</a>`
                         } else if ((params.file_khs || params.file_krs) && (hak_akses == 'Admin' || hak_akses == 'Mahasiswa')) {
                             html += `<x-button.button-link text="Upload Kurang" class="btn-warning" link="{{ url('dashboard/aktivitas/registrasi-mbkm/form-upload-file') }}/${params.id}" title="Melakukan upload file untuk ${params.nama_mahasiswa }"/>`
                         } else {

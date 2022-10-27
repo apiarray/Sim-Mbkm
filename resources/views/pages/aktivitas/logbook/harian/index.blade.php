@@ -77,8 +77,8 @@
                     orderable: true
                 },
                 {
-                    data: 'tanggal',
-                    name: 'tanggal',
+                    data: 'ttanggal',
+                    name: 'ttanggal',
                     searchable: true,
                     orderable: true
                 },
