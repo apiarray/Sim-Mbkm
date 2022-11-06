@@ -11,7 +11,7 @@
     @endif
 
     <section class="mt-5">
-        <x-cards.regular-card heading="Penilaian Dosen DPL">
+        <x-cards.regular-card heading="Penilaian DPL">
             @if (!auth()->guard('mahasiswa')->check())
                 <x-button.button-link text="Add Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
             @endif
@@ -193,7 +193,7 @@
                             }
                         } else {
                             html += `<x-button.button-link  text="Lihat Penilaian" class="btn btn-success" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" />`
-                        }
+                        }   
                         return html
                     }
                 },
@@ -224,6 +224,10 @@
                                     html += `<x-button text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
                                     html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`
                                 }
+                            }
+                            if (row.status == 'tervalidasi' || row.status == 'tervalidasi') {
+                                html += `<x-button.button-link  text="Cetak" class="btn-primary" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/cetak') }}/${row.id}" />`;
+                               
                             }
                             return html
                         }

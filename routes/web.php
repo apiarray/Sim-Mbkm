@@ -223,6 +223,7 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                 Route::get('/', [PenilaianDosenDplController::class, 'index'])->name('aktivitas.penilaian_dosen_dpl.index');
                 Route::get('/list-datatable', [PenilaianDosenDplController::class, 'listPenilaianDosenDpl'])->name('aktivitas.penilaian_dosen_dpl.create');
                 Route::get('/detail/{id}', [PenilaianDosenDplController::class, 'show'])->name('aktivitas.penilaian_dosen_dpl.show');
+                Route::get('/cetak/{id}', [PenilaianDosenDplController::class, 'cetak'])->name('aktivitas.penilaian_dosen_dpl.cetak');
             });
 
             Route::prefix('laporan-akhir')->group(function () {

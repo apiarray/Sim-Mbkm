@@ -155,7 +155,7 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (params.status == 'mengajukan' && hak_akses == 'Admin') {
+                        } else if (params.status == 'mengajukan' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
                             // html += '<span class="badge bg-warning">AJUKAN VALIDASI</span>';
                             html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-mengajukan-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-mengajukan-${params.id}" title="Ajukan Validasi" formLink="{{ url('dashboard/aktivitas/logbook/mingguan/validate') }}/${params.id}" >
@@ -168,7 +168,7 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (params.status == 'revisi' && hak_akses == 'Admin') {
+                        } else if (params.status == 'revisi' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
                             // html += '<span class="badge bg-danger">REVISI DOSEN</span>';
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-revisi-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-revisi-${params.id}" title="Revisi" formLink="{{ url('dashboard/aktivitas/logbook/mingguan/validate') }}/${params.id}" >
