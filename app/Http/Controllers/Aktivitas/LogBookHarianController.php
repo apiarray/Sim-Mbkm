@@ -146,6 +146,34 @@ class LogBookHarianController extends Controller
         return redirect()->back()->with('message', 'logbook harian successfully submited');
     }
 
+
+    public function validates(Request $request, $id)
+    {
+        $dataLogbookHarian = LogbookHarian::find($id);
+        if (!$dataLogbookHarian) {
+            return redirect()->back()->with('message', 'logbook harian tidak ditemukan');
+        }
+
+        $request->validate([
+            'status' => 'required|in:mengajukan,dalam_proses,revisi,tervalidasi'
+        ]);
+
+        if ($request->status == 'tervalidasi') {
+            $dataLogbookHarian->id_log_harian = generateRandomString(10, 4);
+        } else if ($request->status == 'mengajukan') {
+            $dataLogbookHarian->id_log_harian = NULL;
+        } else if ($request->status == 'dalam_proses') {
+            $dataLogbookHarian->id_log_harian = NULL;
+        } else if ($request->status == 'revisi') {
+            $dataLogbookHarian->id_log_harian = NULL;
+        }
+
+        $dataLogbookHarian->status = $request->status;
+        $dataLogbookHarian->save();
+
+        return redirect()->back()->with('message', 'logbook harian successfully submited');
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -225,4 +253,10 @@ class LogBookHarianController extends Controller
 
         return redirect()->back()->with($deleteLogbook->isOk ? 'message' : 'error', $deleteLogbook->message);
     }
+    public function dwonload($nama){
+
+        $myFile = storage_path("$nama");
+    	return response()->download($myFile);
+    }
 }
+

@@ -223,6 +223,7 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                 Route::get('/', [PenilaianDosenDplController::class, 'index'])->name('aktivitas.penilaian_dosen_dpl.index');
                 Route::get('/list-datatable', [PenilaianDosenDplController::class, 'listPenilaianDosenDpl'])->name('aktivitas.penilaian_dosen_dpl.create');
                 Route::get('/detail/{id}', [PenilaianDosenDplController::class, 'show'])->name('aktivitas.penilaian_dosen_dpl.show');
+                Route::get('/cetak/{id}', [PenilaianDosenDplController::class, 'cetak'])->name('aktivitas.penilaian_dosen_dpl.cetak');
             });
 
             Route::prefix('laporan-akhir')->group(function () {
@@ -240,13 +241,23 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::get('/', [LogBookHarianController::class, 'index'])->name('aktivitas.logbook.harian.index');
                     Route::get('/list-datatable', [LogBookHarianController::class, 'listLogHarianDatatable'])->name('aktivitas.logbook.harian.listlogharian');
                     Route::get('/detail/{id}', [LogBookHarianController::class, 'show'])->name('aktivitas.logbook.harian.detail');
+                    Route::post('/validate/{id}', [LogBookHarianController::class, 'validateLogbook'])->name('aktivitas.logbook.harian.validateLogbook');
+                    Route::post('/validates/{id}', [LogBookHarianController::class, 'validates'])->name('aktivitas.logbook.harian.validates');
+                    //dwonload
+             
+                    // Route::get('dwonload/{name}, function')
+                    // Route::get('/unduh/{id}', [App\Http\Controllers\SuratController::class, 'unduh']);
+                    //end
                 });
+                //route dwonload
+             
 
                 Route::prefix('mingguan')->group(function () {
                     Route::get('/', [LogBookMingguanController::class, 'index'])->name('aktivitas.logbook.mingguan.index');
                     Route::get('/list-datatable', [LogBookMingguanController::class, 'listLogMingguanDatatable'])->name('aktivitas.logbook.mingguan.listlogmingguan');
                     Route::get('/list-all', [LogBookMingguanController::class, 'listLogMingguan'])->name('aktivitas.logbook.mingguan.listlogmingguan.all');
                     Route::get('/detail/{id}', [LogBookMingguanController::class, 'show'])->name('aktivitas.logbook.mingguan.detail');
+                    Route::post('/validates/{id}', [LogBookMingguanController::class, 'validates'])->name('aktivitas.logbook.mingguan.validates');
                 });
             });
 

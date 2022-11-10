@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Aktivitas;
 
+use Barryvdh\DomPDF\PDF;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas\JawabanPenilaian;
 use App\Models\Aktivitas\PenilaianDosenDpl;
 use App\Models\Aktivitas\RegistrasiMbkm;
 use App\Models\Masters\BabPenilaian;
 use App\Models\Masters\PilihanPenilaian;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\Return_;
+use PHPUnit\Framework\MockObject\Stub\ReturnSelf;
 use Yajra\DataTables\Facades\DataTables;
 
 class PenilaianDosenDplController extends Controller
@@ -104,6 +109,62 @@ class PenilaianDosenDplController extends Controller
             'dataJawaban' => $dataJawaban,
         ]);
     }
+
+    public function cetak($id)
+    {
+        //penilaian dosen
+        $penilaian = PenilaianDosenDpl::find($id);
+        $dataSoal = BabPenilaian::with('penilaian.pilihan_penilaian')->get();
+        $dataJawaban = JawabanPenilaian::where('penilaian_dosen_dpl_id', $id)->get();
+
+
+        $listRegistrasiMbkm = RegistrasiMbkm::select('id', 'id_registrasi', 'mahasiswa_id', 'program_id', 'dosen_dpl_id', 'tanggal_registrasi', 'tanggal_validasi')
+            ->where('status_validasi', 'tervalidasi')
+            ->where('is_accepted', 1)
+            ->whereNotIn(
+                'id',
+                PenilaianDosenDpl::select('registrasi_mbkm_id')
+                    ->where('registrasi_mbkm_id', '!=', $penilaian->registrasi_mbkm_id)
+                    ->get()->pluck('registrasi_mbkm_id')
+            )
+            ->get();
+
+
+        $id_mahasiswa = $listRegistrasiMbkm[0]->mahasiswa_id;
+        $id_program = $listRegistrasiMbkm[0]->program_id;
+        $id_dosen = $listRegistrasiMbkm[0]->dosen_dpl_id;
+        $tanggal_registrasi = $listRegistrasiMbkm[0]->tanggal_registrasi;
+        $tanggal_validasi = $listRegistrasiMbkm[0]->tanggal_validasi;
+        // $newDateFormat = $tanggal_registrasi->format('d/m/Y');
+        // memanggil mahasiswa
+        $tgl_regis = Carbon::parse($tanggal_registrasi)->format('d/m/Y');
+        $tgl_valid = Carbon::parse($tanggal_validasi)->format('d/m/Y');
+
+        $m = DB::table('mahasiswa')->where('id', $id_mahasiswa)->get();
+        // memanggil program
+        $p = DB::table('program')->where('id', $id_program)->get();
+
+        // memanggil dosen
+        $d = DB::table('dosen_dpl')->where('id', $id_dosen)->get();
+
+
+
+        $data = FacadePdf::loadview(
+            'pages.aktivitas.penilaian-dosen-dpl.cetak',
+            [
+                'penilaian' => $penilaian, 'listRegistrasiMbkm' => $listRegistrasiMbkm,
+                'm' => $m, 'p' => $p, 'd' => $d, 'dataSoal' => $dataSoal, 'dataJawaban' => $dataJawaban,
+                'tgl_regis' => $tgl_regis, 'tgl_valid' => $tgl_valid,
+            ],
+        );
+
+        return $data->stream();
+        // return dwonload('penilaian_dosen_dpl.pdf');
+
+        // echo $users;
+    }
+
+
 
     public function storePenilaian(Request $request, $id)
     {

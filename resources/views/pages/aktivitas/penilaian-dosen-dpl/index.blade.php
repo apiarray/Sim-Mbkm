@@ -11,7 +11,7 @@
     @endif
 
     <section class="mt-5">
-        <x-cards.regular-card heading="Penilaian Dosen DPL">
+        <x-cards.regular-card heading="Penilaian DPL">
             @if (!auth()->guard('mahasiswa')->check())
                 <x-button.button-link text="Add Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
             @endif
@@ -42,6 +42,12 @@
                         @if (!auth()->guard('mahasiswa')->check())
                             <th scope="row">Action</th>
                         @endif
+                        <!-- mahasiswa -->
+
+                        @if (auth()->guard('mahasiswa')->check())
+                            <th scope="row">Action</th>
+                        @endif
+                        <!-- endmahasiswa -->
                     </tr>
                 </x-slot>
                 <x-slot name="body">
@@ -193,7 +199,7 @@
                             }
                         } else {
                             html += `<x-button.button-link  text="Lihat Penilaian" class="btn btn-success" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" />`
-                        }
+                        }   
                         return html
                     }
                 },
@@ -225,10 +231,41 @@
                                     html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`
                                 }
                             }
+                            if (row.status == 'tervalidasi' || row.status == 'tervalidasi') {
+                                html += `<x-button.button-link  text="Cetak" class="btn-primary" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/cetak') }}/${row.id}" />`;
+                               
+                            }
                             return html
                         }
                     }
                 @endif
+
+//mahasiswa
+@if (auth()->guard('mahasiswa')->check())
+                    {
+                        data: 'action',
+                        name: 'action',
+                        searchable: false,
+                        orderable: false,
+                        render: function(row) {
+                            row = JSON.parse(row)
+                            console.log(row);
+                            var html = ''
+                           
+                            if (row.status == 'tervalidasi' || row.status == 'tervalidasi') {
+                                html += `<x-button.button-link  text="Cetak" class="btn-primary" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/cetak') }}/${row.id}" />`;
+                               
+                            }
+                            return html
+                        }
+                    }
+                @endif
+
+
+                //end mahasiswa
+
+
+
             ]
         });
     </script>

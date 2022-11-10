@@ -36,6 +36,8 @@
                         <th scope="row">Tahun Ajaran</th>
                         <th scope="row">Deskripsi</th>
                         <th scope="row">Status Log Book Harian</th>
+                        <th scope="row">Alokasi Waktu</th>
+                        <th scope="row">Dwonload</th>
                         <th scope="row">Action</th>
                     </tr>
                 </x-slot>
@@ -143,9 +145,13 @@
 
                         if (params.status == 'tervalidasi') {
                             html += '<span class="badge bg-success">VALID</span>';
-                        } else if (params.status == 'dalam_proses' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
-                            html += `<x-button text="Proses Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
-                            html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
+                        } else if (params.status == 'dalam_proses') {
+                            if(hak_akses == 'Mahasiswa'){
+                                html += '<span class="badge bg-info">Readonly</span>';
+                            }else{
+                                html += `<x-button text="Proses Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
+                            html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" 
+                            formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
                     <slot>
                         <div class="form-group">
                             <select name="status" required>
@@ -156,7 +162,26 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (params.status == 'mengajukan' && hak_akses == 'Admin') {
+                            }
+                            
+                        }else if(hak_akses == 'Mahasiswa' && params.status == 'mengajukan'){
+                            html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
+                            html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" 
+                    formLink="{{ url('dashboard/aktivitas/logbook/harian/validates') }}/${params.id}" >
+                    <slot>
+                        <div class="form-group">
+                            <select name="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="dalam_proses">Ajukan Ke Dosen</option>
+                            </select>
+                        </div>
+                    </slot>
+                    </x-modal.modal-confirm>`                            
+                        }
+//status pada mahasiswa saat dalam proses
+
+//end status pada mahasiswa
+                        else if (params.status == 'mengajukan' && (hak_akses == 'Admin' || hak_akses == 'Dosen')) {
                             // html += '<span class="badge bg-warning">AJUKAN VALIDASI</span>';
                             html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-mengajukan-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-mengajukan-${params.id}" title="Ajukan Validasi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
@@ -169,7 +194,7 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (params.status == 'revisi' && hak_akses == 'Admin') {
+                        } else if (params.status == 'revisi' && (hak_akses == 'Admin'  || hak_akses == 'Dosen')) {
                             // html += '<span class="badge bg-danger">REVISI DOSEN</span>';
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-revisi-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-revisi-${params.id}" title="Revisi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
@@ -183,7 +208,44 @@
                     </slot>
                     </x-modal.modal-confirm>`
                         }
+                        //revisi dari mahasiswa ke dosen 
+
+                        else if ( hak_akses == 'Mahasiswa' && params.status == 'revisi') {
+                            // html += '<span class="badge bg-danger">REVISI DOSEN</span>';
+                            html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-revisi-${params.id}" />`;
+                            html += `<x-modal.modal-confirm modalId="modal-confirm-revisi-${params.id}" title="Revisi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validates') }}/${params.id}" >
+                    <slot>
+                        <div class="form-group">
+                            <select name="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="dalam_proses">Proses ke Dosen</option>
+                            </select>
+                        </div>
+                    </slot>
+                    </x-modal.modal-confirm>`
+                        }
+
+                        //end reviisi
                         return html
+                    }
+                },
+
+                {
+                    data: 'durasi',
+                    name: 'durasi',
+                    searchable: true,
+                    orderable: true
+                },
+                {
+                    data: 'link_dokumen',
+                    name: 'link_dokumen',
+                    searchable: true,
+                    orderable: true,
+                    render:function(row){
+                        if(row){
+                            return `<x-button.button-link  text="Dwonload" class="btn-info" link="" />`;
+                            
+                        }
                     }
                 },
                 {

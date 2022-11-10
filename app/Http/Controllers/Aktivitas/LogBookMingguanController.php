@@ -168,7 +168,36 @@ class LogBookMingguanController extends Controller
 
         return redirect()->back()->with('message', 'logbook mingguan successfully submited');
     }
+    //validates pengajuan mahasiswa
 
+    public function validates(Request $request, $id)
+    {
+        $dataLogbookMingguan = LogbookMingguan::find($id);
+        if (!$dataLogbookMingguan) {
+            return redirect()->back()->with('message', 'logbook mingguan tidak ditemukan');
+        }
+
+        $request->validate([
+            'status' => 'required|in:mengajukan,dalam_proses,revisi,tervalidasi'
+        ]);
+
+        if ($request->status == 'tervalidasi') {
+            $dataLogbookMingguan->id_log_mingguan = generateRandomString(10, 4);
+        } else if ($request->status == 'mengajukan') {
+            $dataLogbookMingguan->id_log_mingguan = NULL;
+        } else if ($request->status == 'dalam_proses') {
+            $dataLogbookMingguan->id_log_mingguan = NULL;
+        } else if ($request->status == 'revisi') {
+            $dataLogbookMingguan->id_log_mingguan = NULL;
+        }
+
+        $dataLogbookMingguan->status = $request->status;
+        $dataLogbookMingguan->save();
+
+        return redirect()->back()->with('message', 'logbook mingguan successfully submited');
+    }
+
+    //end pengajuan
     /**
      * Show the form for editing the specified resource.
      *

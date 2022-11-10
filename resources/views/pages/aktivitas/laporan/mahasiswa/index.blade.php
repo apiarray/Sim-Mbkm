@@ -34,6 +34,8 @@
                         <th scope="row">Tahun Ajaran</th>
                         <th scope="row">Deskripsi</th>
                         <th scope="row">Status Laporan Akhir</th>
+                        <th scope="row">Dokumen</th>
+                        <th scope="row">Link Youtube</th>
                         <th scope="row">Action</th>
                     </tr>
                 </x-slot>
@@ -136,8 +138,9 @@
                         row = JSON.parse(row)
                         var html = ''
 
-                        if (row.status_laporan_akhir == 'ajukan_validasi_dpl' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
-                            html += `<x-button text="Ajukan Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${row.id}" />`;
+                        if (row.status_laporan_akhir == 'dalam_proses') {
+                            if(hak_akses == 'Dosen' || hak_akses == 'Admin'){
+                                html += `<x-button text="Proses Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${row.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${row.id}" title="Proses Validasi" 
                     formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/validate') }}/${row.id}" >
                     <slot>
@@ -145,12 +148,34 @@
                             <select name="status" required>
                                 <option value="">-- Pilih Status --</option>
                                 <option value="validasi">Valid</option>
-                                <option value="revisi_dpl">Revisi</option>
+                                <option value="revisi">Revisi</option>
                             </select>
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (row.status_laporan_akhir == 'revisi_dpl' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
+                            }else{
+                                html+=`<span class="badge badge-info">Readonly</span>`
+                            }
+
+                        }else if (row.status_laporan_akhir == 'mengajukan' && (hak_akses == 'Dosen' || hak_akses == 'Admin' || hak_akses == 'Mahasiswa')) {
+                            html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-proses-validasi-${row.id}" />`;
+                            html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${row.id}" title="Proses Validasi" 
+                    formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/validate') }}/${row.id}" >
+                    <slot>
+                        <div class="form-group">
+                            <select name="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="dalam_proses">Proses Ke Dosen</option>
+                            </select>
+                        </div>
+                    </slot>
+                    </x-modal.modal-confirm>`
+                        }
+                        
+                        
+                        
+                        
+                        else if (row.status_laporan_akhir == 'revisi' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin' || hak_akses == 'Dosen')) {
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-kirim-revisi-${row.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-kirim-revisi-${row.id}" title="Kirim Revisi" 
                     formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/validate') }}/${row.id}" >
@@ -158,16 +183,42 @@
                         <div class="form-group">
                             <select name="status" required>
                                 <option value="">-- Pilih Status --</option>
-                                <option value="ajukan_validasi_dpl">Kirim Revisi</option>
+                                <option value="dalam_proses">Kirim Revisi</option>
                             </select>
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
                         } else if (row.status_laporan_akhir == 'validasi') {
                             html += '<span class="badge bg-success">VALID</span>';
+                        }else if(hak_akses == 'Mahasiswa'){
+                            html += '<span class="badge bg-warning">MENUNGGU VALIDASI</span>';
                         }
 
                         return html
+                    }
+                },
+                {
+                    data: 'materi_pdf',
+                    name: 'materi_pdf',
+                    searchable: true,
+                    orderable: true,
+                    render:function(row){
+                        if(row){
+                            return `<x-button.button-link  text="Dwonload" class="btn btn-info" link="" />`;
+                            
+                        }
+                    }
+                },
+                {
+                    data: 'link_youtube',
+                    name: 'link_youtube',
+                    searchable: true,
+                    orderable: true,
+                    render:function(row){
+                        if(row){
+                            return `<x-button.button-link  text="vidio" class="btn-success" link="${row}" />`;
+                            
+                        }
                     }
                 },
                 {
@@ -181,9 +232,9 @@
                         var html = ''
 
                         html += `<x-button.button-link  text="Detail" class="btn-success" link="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/detail') }}/${row.id}" />`;
-                        if ((row.status_laporan_akhir == 'ajukan_validasi_dpl' || row.status_laporan_akhir == 'revisi_dpl') && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
+                        if ((row.status_laporan_akhir == 'mengajukan' || row.status_laporan_akhir == 'revisi') && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
                             html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/edit') }}/${row.id}" />`;
-                            if (row.status_laporan_akhir == 'ajukan_validasi_dpl' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
+                            if (row.status_laporan_akhir == 'mengajukan' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
                                 html += `<x-button.button-link text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
                                 html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/destroy') }}/${row.id_laporan_akhir_mahasiswa}" />`
                             }

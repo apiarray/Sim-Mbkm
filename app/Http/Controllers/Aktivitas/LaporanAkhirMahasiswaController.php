@@ -166,14 +166,16 @@ class LaporanAkhirMahasiswaController extends Controller
         }
 
         $request->validate([
-            'status' => 'required|in:validasi,revisi_dpl,ajukan_validasi_dpl'
+            'status' => 'required|in:validasi,revisi,mengajukan,dalam_proses'
         ]);
 
         if ($request->status == 'validasi') {
             $dataLaporanAkhir->id_laporan_akhir_mahasiswa = generateRandomString(10, 4);
-        } else if ($request->status == 'revisi_dpl') {
+        } else if ($request->status == 'revisi') {
             $dataLaporanAkhir->id_laporan_akhir_mahasiswa = NULL;
-        } else if ($request->status == 'ajukan_validasi_dpl') {
+        } else if ($request->status == 'dalam_proses') {
+            $dataLaporanAkhir->id_laporan_akhir_mahasiswa = NULL;
+        } else if ($request->status == 'mengajukan') {
             $dataLaporanAkhir->id_laporan_akhir_mahasiswa = NULL;
         }
 
