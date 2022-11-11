@@ -171,10 +171,6 @@
                     </slot>
                     </x-modal.modal-confirm>`
                         }
-                        
-                        
-                        
-                        
                         else if (row.status_laporan_akhir == 'revisi' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin' || hak_akses == 'Dosen')) {
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-kirim-revisi-${row.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-kirim-revisi-${row.id}" title="Kirim Revisi" 

@@ -11,10 +11,12 @@
     @endif
 
     <section class="mt-5">
+
         <x-cards.regular-card heading="Logbook Harian">
             @if (!auth()->guard('dosen')->check())
                 <x-button.button-link text="New Logbook Harian" class="btn-success mb-4" link="{{ route('aktivitas.logbook.harian.create') }}" />
             @endif
+
             <x-table id="logbook-datatables">
                 <x-slot name="header">
                     <tr>
@@ -163,7 +165,6 @@
                     </slot>
                     </x-modal.modal-confirm>`
                             }
-                            
                         }else if(hak_akses == 'Mahasiswa' && params.status == 'mengajukan'){
                             html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" 
@@ -177,11 +178,9 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`                            
-                        }
 //status pada mahasiswa saat dalam proses
 
-//end status pada mahasiswa
-                        else if (params.status == 'mengajukan' && (hak_akses == 'Admin' || hak_akses == 'Dosen')) {
+                        } else if (params.status == 'mengajukan' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
                             // html += '<span class="badge bg-warning">AJUKAN VALIDASI</span>';
                             html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-mengajukan-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-mengajukan-${params.id}" title="Ajukan Validasi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
@@ -194,7 +193,8 @@
                         </div>
                     </slot>
                     </x-modal.modal-confirm>`
-                        } else if (params.status == 'revisi' && (hak_akses == 'Admin'  || hak_akses == 'Dosen')) {
+
+                        } else if (params.status == 'revisi' && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
                             // html += '<span class="badge bg-danger">REVISI DOSEN</span>';
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-revisi-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-revisi-${params.id}" title="Revisi" formLink="{{ url('dashboard/aktivitas/logbook/harian/validate') }}/${params.id}" >
