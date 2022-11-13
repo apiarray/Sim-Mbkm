@@ -224,6 +224,7 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                 Route::get('/list-datatable', [PenilaianDosenDplController::class, 'listPenilaianDosenDpl'])->name('aktivitas.penilaian_dosen_dpl.create');
                 Route::get('/detail/{id}', [PenilaianDosenDplController::class, 'show'])->name('aktivitas.penilaian_dosen_dpl.show');
                 Route::get('/cetak/{id}', [PenilaianDosenDplController::class, 'cetak'])->name('aktivitas.penilaian_dosen_dpl.cetak');
+                Route::get('/destroy/{id}', [PenilaianDosenDplController::class, 'destroy'])->name('aktivitas.penilaian_dosen_dpl.destroy');
             });
 
             Route::prefix('laporan-akhir')->group(function () {
@@ -243,14 +244,16 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::get('/detail/{id}', [LogBookHarianController::class, 'show'])->name('aktivitas.logbook.harian.detail');
                     Route::post('/validate/{id}', [LogBookHarianController::class, 'validateLogbook'])->name('aktivitas.logbook.harian.validateLogbook');
                     Route::post('/validates/{id}', [LogBookHarianController::class, 'validates'])->name('aktivitas.logbook.harian.validates');
+                    Route::get('/list-all', [LogBookHarianController::class, 'listLogHarian'])->name('aktivitas.logbook.mingguan.listLogHarian.all');
+
                     //dwonload
-             
+
                     // Route::get('dwonload/{name}, function')
                     // Route::get('/unduh/{id}', [App\Http\Controllers\SuratController::class, 'unduh']);
                     //end
                 });
                 //route dwonload
-             
+
 
                 Route::prefix('mingguan')->group(function () {
                     Route::get('/', [LogBookMingguanController::class, 'index'])->name('aktivitas.logbook.mingguan.index');
@@ -320,7 +323,9 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::post('/store', [LogBookHarianController::class, 'store'])->name('aktivitas.logbook.harian.store');
                     Route::get('/edit/{id}', [LogBookHarianController::class, 'edit'])->name('aktivitas.logbook.harian.edit');
                     Route::put('/update/{id}', [LogBookHarianController::class, 'update'])->name('aktivitas.logbook.harian.update');
-                    Route::delete('/destroy/{id}', [LogBookHarianController::class, 'destroy'])->name('aktivitas.logbook.harian.destroy');
+                    Route::get('/destroy/{id}', [LogBookHarianController::class, 'destroy'])->name('aktivitas.logbook.harian.destroy');
+                    //dwonload
+                    Route::get('/download/{id}', [LogBookHarianController::class, 'download'])->name('aktivitas.logbook.harian.download');
                 });
 
                 Route::prefix('mingguan')->group(function () {
@@ -328,7 +333,7 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::post('/store', [LogBookMingguanController::class, 'store'])->name('aktivitas.logbook.mingguan.store');
                     Route::get('/edit/{id}', [LogBookMingguanController::class, 'edit'])->name('aktivitas.logbook.mingguan.edit');
                     Route::put('/update/{id}', [LogBookMingguanController::class, 'update'])->name('aktivitas.logbook.mingguan.update');
-                    Route::delete('/destroy/{id}', [LogBookMingguanController::class, 'destroy'])->name('aktivitas.logbook.mingguan.destroy');
+                    Route::get('/destroy/{id}', [LogBookMingguanController::class, 'destroy'])->name('aktivitas.logbook.mingguan.destroy');
                 });
             });
 
@@ -338,7 +343,7 @@ Route::prefix('dashboard')->middleware(['auth:admin,mahasiswa,dosen'])->group(fu
                     Route::post('/store', [LaporanAkhirMahasiswaController::class, 'store'])->name('aktivitas.laporan_akhir.mahasiswa.store');
                     Route::get('/edit/{id}', [LaporanAkhirMahasiswaController::class, 'edit'])->name('aktivitas.laporan_akhir.mahasiswa.edit');
                     Route::put('/update/{id}', [LaporanAkhirMahasiswaController::class, 'update'])->name('aktivitas.laporan_akhir.mahasiswa.update');
-                    Route::delete('/destroy/{id}', [LaporanAkhirMahasiswaController::class, 'destroy'])->name('aktivitas.laporan_akhir.mahasiswa.destroy');
+                    Route::get('/destroy/{id}', [LaporanAkhirMahasiswaController::class, 'destroy'])->name('aktivitas.laporan_akhir.mahasiswa.destroy');
                     // Route::get('/get-data-laporan-akhir', [LaporanAkhirMahasiswaController::class, 'getDataLaporanAkhir'])->name('get-data-laporan-akhir');
                     // Route::get('/get-data-laporan-akhir_detail/{id}', [LaporanAkhirMahasiswaController::class, 'getDataLaporanAkhirDetail'])->name('get-data-laporan-akhir_detail');
                 });

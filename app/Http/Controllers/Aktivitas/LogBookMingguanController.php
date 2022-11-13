@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Aktivitas;
 
+use App\Dao\Aktivitas\LogbookMingguanDao;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas\LogbookMingguan;
 use App\Models\Aktivitas\RegistrasiMbkm;
@@ -10,6 +11,16 @@ use Yajra\DataTables\Facades\DataTables;
 
 class LogBookMingguanController extends Controller
 {
+
+
+    private $logbookMingguanDao, $fakultasDao;
+
+    public function __construct(LogbookMingguanDao $logbookMingguanDao)
+    {
+        $this->logbookMingguanDao = $logbookMingguanDao;
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -117,7 +128,7 @@ class LogBookMingguanController extends Controller
         $lb->status = 'mengajukan';
         $lb->save();
 
-        return redirect()->back()->with('message', 'logbook mingguan successfully saved');
+        return redirect('dashboard/aktivitas/logbook/mingguan')->with('message', 'logbook mingguan successfully saved');
     }
 
     /**
@@ -265,7 +276,9 @@ class LogBookMingguanController extends Controller
         $lb->tanggal = $request->tanggal;
         $lb->save();
 
-        return redirect()->back()->with('message', 'logbook mingguan successfully updated');
+        return redirect('dashboard/aktivitas/logbook/mingguan')->with('message', 'logbook mingguan berhasil diupdate');
+
+        // return view('pages.aktivitas.logbook.mingguan.index')->with('message', 'logbook mingguan successfully updated');
     }
 
     /**
@@ -276,8 +289,8 @@ class LogBookMingguanController extends Controller
      */
     public function destroy($id)
     {
-        LogbookMingguan::find($id)->forceDelete();
+        $deleteLogbook = $this->logbookMingguanDao->delete($id);
 
-        return redirect()->back()->with('message', 'logbook mingguan successfully deleted');
+        return redirect()->back()->with($deleteLogbook->isOk ? 'message' : 'error', $deleteLogbook->message);
     }
 }

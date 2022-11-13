@@ -200,7 +200,7 @@
                     orderable: true,
                     render:function(row){
                         if(row){
-                            return `<x-button.button-link  text="Dwonload" class="btn btn-info" link="" />`;
+                            return `<x-button.button-link  text="Dwonload" class="btn-success" link="{{ url('storage') }}/${row}" />`;
                             
                         }
                     }
@@ -231,8 +231,7 @@
                         if ((row.status_laporan_akhir == 'mengajukan' || row.status_laporan_akhir == 'revisi') && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
                             html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/edit') }}/${row.id}" />`;
                             if (row.status_laporan_akhir == 'mengajukan' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
-                                html += `<x-button.button-link text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
-                                html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/destroy') }}/${row.id_laporan_akhir_mahasiswa}" />`
+                                html += `<x-button.button-link  text="delete" class="btn-danger" link="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/destroy') }}/${row.id}" />`;
                             }
                         }
                         return html

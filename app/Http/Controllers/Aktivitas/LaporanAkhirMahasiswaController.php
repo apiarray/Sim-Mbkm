@@ -122,7 +122,7 @@ class LaporanAkhirMahasiswaController extends Controller
         }
         DB::commit();
 
-        return redirect()->back()->with('message', 'Laporan Akhir Mahasiswa successfully saved');
+        return redirect('dashboard/aktivitas/laporan-akhir/mahasiswa')->with('message', 'Laporan Akhir Mahasiswa successfully saved');
     }
 
     /**
@@ -285,7 +285,7 @@ class LaporanAkhirMahasiswaController extends Controller
             $insertDataDetail->save();
         }
         DB::commit();
-        return redirect()->back()->with('message', 'Laporan Akhir successfully updated');
+        return redirect('dashboard/aktivitas/laporan-akhir/mahasiswa')->with('message', 'Laporan Akhir successfully updated');
     }
 
     /**
@@ -297,8 +297,8 @@ class LaporanAkhirMahasiswaController extends Controller
     public function destroy($id)
     {
         //
-        $delete = DB::table('laporan_akhir_mahasiswa_detail')->where('laporan_akhir_mahasiswa_id', $id)->delete();
-        // $delete = DB::table('laporan_akhir_mahasiswa')->where('id', $id)->delete();
+        // $delete = DB::table('laporan_akhir_mahasiswa_detail')->where('laporan_akhir_mahasiswa_id', $id)->delete();
+        $delete = DB::table('laporan_akhir_mahasiswa')->where('id', $id)->delete();
 
         if ($delete) {
             request()->session()->flash('message', 'Data Laporan Berhasil DiHapus');
@@ -306,7 +306,7 @@ class LaporanAkhirMahasiswaController extends Controller
             request()->session()->flash('error', 'Data Gagal DiHapus');
         }
 
-        return redirect()->route('aktivitas.laporan_akhir.mahasiswa.index');
+        return redirect('dashboard/aktivitas/laporan-akhir/mahasiswa')->with('message', 'Laporan Akhir successfully deleted');
     }
 
     public function getDataLaporanAkhir(Request $request)

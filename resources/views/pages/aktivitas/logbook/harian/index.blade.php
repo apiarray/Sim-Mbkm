@@ -5,7 +5,7 @@
     @if (session()->get('message'))
         <x-alert title="Success" message="{{ session()->get('message') }}" />
     @endif
-
+    
     @if (session()->get('error'))
         <x-alert type="danger" title="Error" message="{{ session()->get('error') }}" />
     @endif
@@ -243,8 +243,7 @@
                     orderable: true,
                     render:function(row){
                         if(row){
-                            return `<x-button.button-link  text="Dwonload" class="btn-info" link="" />`;
-                            
+                            return `<x-button.button-link  text="Dwonload" class="btn-success" link="{{ url('storage') }}/${row}" />`;
                         }
                     }
                 },
@@ -261,8 +260,7 @@
                         if ((row.status == 'mengajukan' || row.status == 'revisi') && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
                             html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/logbook/harian/edit') }}/${row.id}" />`;
                             if (row.status == 'mengajukan' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin')) {
-                                html += `<x-button.button-link text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
-                                html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/logbook/harian/destroy') }}/${row.id}" />`
+                                html += `<x-button.button-link  text="delete" class="btn-danger" link="{{ url('dashboard/aktivitas/logbook/harian/destroy') }}/${row.id}" />`;
                             }
                         }
                         return html

@@ -274,6 +274,8 @@ class PenilaianDosenDplController extends Controller
      */
     public function destroy($id)
     {
-        //
+        PenilaianDosenDpl::find($id)->delete();
+
+        return redirect('dashboard/aktivitas/penilaian-dosen-dpl')->with('penilaian dosen dpl delete success');
     }
 }

@@ -34,6 +34,7 @@
                             <th scope="row">Program</th>
                         @endif
                         <th scope="row">Tahun Ajaran</th>
+                        <th scope="row">Logbook Harian</th>
                         <th scope="row">Logbook Mingguan</th>
                         <th scope="row">Laporan Akhir</th>
                         <th scope="row">Status Penilaian</th>
@@ -140,6 +141,17 @@
                     data: 'action',
                     name: 'action',
                     searchable: false,
+                    orderable: false, // LOGBOOK harian
+                    render: function(params) {
+                        params = JSON.parse(params)
+                        var html = `Valid : ${params.count_logbook_harian_valid} <br> Total : ${params.count_logbook_harian_all}`
+                        return html
+                    }
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    searchable: false,
                     orderable: false, // LOGBOOK MINGGUAN
                     render: function(params) {
                         params = JSON.parse(params)
@@ -227,8 +239,7 @@
                             if (row.status == 'mengajukan' || row.status == 'revisi') {
                                 html += `<x-button.button-link  text="Edit" class="btn-info" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/edit') }}/${row.id}" />`;
                                 if (row.status == 'mengajukan') {
-                                    html += `<x-button text="Delete" class="btn-danger" modalTarget="#modal-delete-${row.id}" />`;
-                                    html += `<x-modal.modal-delete modalId="modal-delete-${row.id}" title="Delete Logbook" formLink="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`
+                                    html += `<x-button.button-link  text="delete" class="btn-danger" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/destroy') }}/${row.id}" />`;
                                 }
                             }
                             if (row.status == 'tervalidasi' || row.status == 'tervalidasi') {

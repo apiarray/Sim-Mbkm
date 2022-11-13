@@ -43,6 +43,26 @@ class LogBookHarianController extends Controller
             ->rawColumns(['action'])
             ->make();
     }
+
+
+    public function listLogHarian(Request $request)
+    {
+        $data = LogbookHarian::listLogbookharian(1);
+
+        if ($request->status == LogbookHarian::STATUS_TERVALIDASI) {
+            $data = $data->where('logbook_harian.status', LogbookHarian::STATUS_TERVALIDASI);
+        } else if ($request->status == LogbookHarian::STATUS_MENGAJUKAN) {
+            $data = $data->where('logbook_harian.status', LogbookHarian::STATUS_MENGAJUKAN);
+        } else if ($request->status == LogbookHarian::STATUS_REVISI) {
+            $data = $data->where('logbook_harian.status', LogbookHarian::STATUS_REVISI);
+        }
+
+        if ($request->registrasi_mbkm_id) {
+            $data = $data->where('registrasi_mbkm.id', $request->registrasi_mbkm_id);
+        }
+
+        return $data->get();
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -102,7 +122,9 @@ class LogBookHarianController extends Controller
         $lb->status = 'mengajukan';
         $lb->save();
 
-        return redirect()->back()->with('message', 'logbook harian successfully saved');
+        return redirect('dashboard/aktivitas/logbook/harian')->with('message', 'logbook harian successfully saved');
+        // return redirect()->route('logbook-harian.index')->with('message', 'logbook harian successfully saved');
+        // return view('pages.aktivitas.logbook.harian.index', ['successMsg'=>'Property is updated .']);
     }
 
     /**
@@ -205,7 +227,7 @@ class LogBookHarianController extends Controller
             'deskripsi' => 'nullable|string',
             'link_dokumen' => 'nullable|file|mimetypes:application/pdf|max:5120', // 5MB
             // 'link_video' => 'nullable|file|mimetypes:video/mp4,video/mpeg|max:20480', // 20MB
-            'link_video' => 'nullable|file|mimetypes:image/bmp,image/gif,image/jpeg,image/png|max:5120', // 5MB
+            // 'link_video' => 'nullable|file|mimetypes:image/bmp,image/gif,image/jpeg,image/png|max:5120', // 5MB
             'tanggal' => 'required|date',
             'durasi' => 'required|in:6,8',
         ]);
@@ -238,7 +260,7 @@ class LogBookHarianController extends Controller
         $lb->durasi = $request->durasi;
         $lb->save();
 
-        return redirect()->back()->with('message', 'logbook harian successfully updated');
+        return redirect('dashboard/aktivitas/logbook/harian')->with('message', 'logbook harian berhasil diupdate');
     }
 
     /**
@@ -253,10 +275,20 @@ class LogBookHarianController extends Controller
 
         return redirect()->back()->with($deleteLogbook->isOk ? 'message' : 'error', $deleteLogbook->message);
     }
-    public function dwonload($nama){
 
-        $myFile = storage_path("$nama");
-    	return response()->download($myFile);
+
+
+
+
+    public function download($id)
+    {
+
+        // $pathDokumen = NULL;
+        // $pathVideo = NULL;
+        // if ($request->file('link_dokumen')) {
+        //     $pathDokumen = request()->file('link_dokumen')->store('dokumen/' . date('Y'), 'public');
+        // }
+        $myFile = storage_path("$id");
+        return response()->file($id);
     }
 }
-
