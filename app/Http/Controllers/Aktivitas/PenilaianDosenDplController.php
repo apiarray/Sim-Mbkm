@@ -118,18 +118,11 @@ class PenilaianDosenDplController extends Controller
         $dataJawaban = JawabanPenilaian::where('penilaian_dosen_dpl_id', $id)->get();
 
 
-        $listRegistrasiMbkm = RegistrasiMbkm::select('id', 'id_registrasi', 'mahasiswa_id', 'program_id', 'dosen_dpl_id', 'tanggal_registrasi', 'tanggal_validasi')
-            ->where('status_validasi', 'tervalidasi')
-            ->where('is_accepted', 1)
-            ->whereNotIn(
-                'id',
-                PenilaianDosenDpl::select('registrasi_mbkm_id')
-                    ->where('registrasi_mbkm_id', '!=', $penilaian->registrasi_mbkm_id)
-                    ->get()->pluck('registrasi_mbkm_id')
-            )
+        $listpenilaian = db::table('penilaian_dosen_dpl')
+            ->where('id', $id)
             ->get();
 
-
+        $listRegistrasiMbkm = db::table('registrasi_mbkm')->where('id', $penilaian->registrasi_mbkm_id)->get();
         $id_mahasiswa = $listRegistrasiMbkm[0]->mahasiswa_id;
         $id_program = $listRegistrasiMbkm[0]->program_id;
         $id_dosen = $listRegistrasiMbkm[0]->dosen_dpl_id;
@@ -158,6 +151,7 @@ class PenilaianDosenDplController extends Controller
             ],
         );
 
+        // return dd($listRegistrasiMbkm);
         return $data->stream();
         // return dwonload('penilaian_dosen_dpl.pdf');
 
@@ -274,8 +268,8 @@ class PenilaianDosenDplController extends Controller
      */
     public function destroy($id)
     {
-        PenilaianDosenDpl::find($id)->delete();
+        $penilaian = PenilaianDosenDpl::where('id', $id)->delete();
 
-        return redirect('dashboard/aktivitas/penilaian-dosen-dpl')->with('penilaian dosen dpl delete success');
+        return redirect('dashboard/aktivitas/penilaian-dosen-dpl')->with('message', 'penilaian dosen dpl delete success');
     }
 }

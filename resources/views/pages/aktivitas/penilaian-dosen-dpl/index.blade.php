@@ -207,7 +207,7 @@
                             if (valid_logbook) {
                                 html += `<x-button.button-link  text="Lakukan Penilaian" class="btn btn-warning" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" />`;
                             } else {
-                                html += `<span class="badge badge-danger">Belum dapat melakukan penilaian</span>`
+                                html += `<x-button.button-link  text="Lakukan Penilaian" class="btn btn-warning" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" disabled />`;
                             }
                         } else {
                             html += `<x-button.button-link  text="Lihat Penilaian" class="btn btn-success" link="{{ url('dashboard/aktivitas/penilaian-dosen-dpl/detail') }}/${row.id}" />`

@@ -11,12 +11,12 @@
 @endif
 
 
-<x-cards.regular-card heading="Form Upload File KHS & KRS">
+<x-cards.regular-card heading="Form Upload Berkas">
     @if (count($errors) > 0)
     <div class="alert alert-danger">
         <ul>
             @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+            <li>{{ $error }}</li>
             @endforeach
         </ul>
     </div>
@@ -27,14 +27,14 @@
         <div class="form-group row">
             <div class="col">
                 <label>Nama Mahasiswa</label>
-                <input type="text" id="nama-mahasiswa" class="form-control" disabled placeholder="Nama Mahasiswa" value="{{ $dataRegistrasi->data->mahasiswa->nama }}" >
-                <input type="hidden" name="id_mahasiswa" class="form-control" placeholder="Nama Mahasiswa" value="{{ $dataRegistrasi->data->id }}" >
+                <input type="text" id="nama-mahasiswa" class="form-control" disabled placeholder="Nama Mahasiswa" value="{{ $dataRegistrasi->data->mahasiswa->nama }}">
+                <input type="hidden" name="id_mahasiswa" class="form-control" placeholder="Nama Mahasiswa" value="{{ $dataRegistrasi->data->id }}">
             </div>
         </div>
 
         <div class="form-group row">
             <div class="col">
-                <x-inputs.textfield class="flex-grow-1 mr-3" label="Upload Berkas 1" name="file_khs" type="file" >
+                <x-inputs.textfield class="flex-grow-1 mr-3" label="Surat Pernyataan" name="file_khs" type="file">
                     @if($dataRegistrasi->data->file_khs)
                     <div>
                         <h6>Dokumen ter-upload</h6>
@@ -44,7 +44,7 @@
                 </x-inputs.textfield>
             </div>
             <div class="col">
-                <x-inputs.textfield class="flex-grow-1 mr-3" label="Upload Berkas 2" name="file_krs" type="file" >
+                <x-inputs.textfield class="flex-grow-1 mr-3" label="Surat Rekomendasi" name="file_krs" type="file">
                     @if($dataRegistrasi->data->file_krs)
                     <div>
                         <h6>Dokumen ter-upload</h6>
@@ -65,7 +65,6 @@
 
 @section('js')
 <script>
-
     // function test(nama){
     //     var data = {
     //         nama : nama,
@@ -80,6 +79,5 @@
     //         }
     //     });
     // }
-
 </script>
 @endsection

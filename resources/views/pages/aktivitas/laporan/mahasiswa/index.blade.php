@@ -157,7 +157,7 @@
                                 html+=`<span class="badge badge-info">Readonly</span>`
                             }
 
-                        }else if (row.status_laporan_akhir == 'mengajukan' && (hak_akses == 'Dosen' || hak_akses == 'Admin' || hak_akses == 'Mahasiswa')) {
+                        }else if (row.status_laporan_akhir == 'mengajukan' && ( hak_akses == 'Admin' || hak_akses == 'Mahasiswa')) {
                             html += `<x-button text="Ajukan Validasi" class="btn-warning" modalTarget="#modal-confirm-proses-validasi-${row.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${row.id}" title="Proses Validasi" 
                     formLink="{{ url('dashboard/aktivitas/laporan-akhir/mahasiswa/validate') }}/${row.id}" >
@@ -171,6 +171,12 @@
                     </slot>
                     </x-modal.modal-confirm>`
                         }
+
+                        else if (row.status_laporan_akhir == 'mengajukan' && hak_akses == 'Dosen') {
+                            html += `<x-button text="Ajukan Validasi" class="btn-warning" />`;
+                        }
+
+
                         else if (row.status_laporan_akhir == 'revisi' && (hak_akses == 'Mahasiswa' || hak_akses == 'Admin' || hak_akses == 'Dosen')) {
                             html += `<x-button text="Revisi" class="btn-danger" modalTarget="#modal-confirm-kirim-revisi-${row.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-kirim-revisi-${row.id}" title="Kirim Revisi" 
@@ -200,7 +206,7 @@
                     orderable: true,
                     render:function(row){
                         if(row){
-                            return `<x-button.button-link  text="Dwonload" class="btn-success" link="{{ url('storage') }}/${row}" />`;
+                            return `<x-button.button-link  text="Download" class="btn-success" link="{{ url('storage') }}/${row}" />`;
                             
                         }
                     }
@@ -212,7 +218,7 @@
                     orderable: true,
                     render:function(row){
                         if(row){
-                            return `<x-button.button-link  text="vidio" class="btn-success" link="${row}" />`;
+                            return `<x-button.button-link  text="Video" class="btn-success" link="${row}" />`;
                             
                         }
                     }

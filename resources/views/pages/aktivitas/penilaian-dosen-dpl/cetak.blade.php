@@ -114,6 +114,10 @@
                         @endforeach
                 </td>
                 <td>
+
+                </td>
+                <td></td>
+                <td>
                     <?php
                     foreach ($dataSoal as $bab) {
                         $sum = 0;
@@ -126,22 +130,20 @@
 
                     ?>
                 </td>
-                <td></td>
-                <td></td>
             </tr>
             <tr>
                 <td></td>
                 <td>Jumlah Total</td>
                 <td></td>
-                <td> {{ $penilaian->nilai }}</td>
                 <td></td>
+                <td> {{ $penilaian->nilai }}</td>
             </tr>
             <tr>
                 <td></td>
                 <td>Nilai</td>
                 <td></td>
-                <td>{{ ($penilaian->nilai / 23.8)*100 }}</td>
                 <td></td>
+                <td>{{ ($penilaian->nilai / 23.8)*100 }}</td>
             </tr>
         </table>
 
