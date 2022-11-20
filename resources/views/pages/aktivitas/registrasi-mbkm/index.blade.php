@@ -30,6 +30,24 @@
                             </select>
                         </div>
                     </div>
+
+
+            <!-- end fakultas -->
+            <!-- jurusan stard  -->
+            <div class="col-md-4">
+                    <div class="form-group">
+                    <label for="jurusan">Fakultas / Jurusan</label>
+                            <select class="form-control" name="jurusan" id="jurusan">
+                                <option value="">Semua</option>
+                                @foreach ($listJurusan as $x)
+                                    <option value="{{ $x->id }}" @if (request('jurusan') == $x->id) selected @endif>{{ $x->nama .' - ' . $x->fakultas }}</option>
+                                @endforeach
+                            </select>
+                    </div>
+
+                    </div>
+
+            <!-- endjurusan -->
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="program">Program</label>
@@ -112,16 +130,42 @@
         var param_tahun_ajaran = "{{ request('tahun_ajaran') }}";
         var param_status_validasi = "{{ request('status_validasi') }}";
         var param_program = "{{ request('program') }}";
+        var param_fakultas = "{{ request('fakultas') }}";
+        var param_kelas = "{{ request('kelas') }}";
+        var param_jurusan = "{{ request('jurusan') }}";
 
         $('#registrasi-datatables').DataTable({
             processing: true,
             serverSide: true,
+
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'pdfHtml5',
+                    text: 'Export PDF',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+                    }
+                }
+            ],
+
+
             ajax: {
                 url: '{!! url('dashboard/aktivitas/registrasi-mbkm/list-datatable') !!}',
                 data: {
                     tahun_ajaran_id: param_tahun_ajaran,
                     status_validasi: param_status_validasi,
                     program_id: param_program,
+                    fakultas_id: param_fakultas,
+                    kelas_id: param_kelas,
+                    jurusan_id: param_jurusan,
                 },
             },
             columns: [{

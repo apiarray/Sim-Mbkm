@@ -26,7 +26,8 @@
                         <th scope="row">Nama Dosen</th>
                         <th scope="row">Semester</th>
                         <th scope="row">Tahun Ajar</th>
-                        <th scope="row">Total Beban Jam</th>
+                        <!-- <th scope="row">Total Beban Jam</th> -->
+                        <th scope="row">Berkas</th>
                         <th scope="row">Action</th>
                     </tr>
                 </x-slot>
@@ -83,17 +84,29 @@
                     searchable: true,
                     orderable: true
                 },
+               
+                // {
+                //     data: 'action',
+                //     name: 'action',
+                //     searchable: true,
+                //     orderable: true,
+                //     render: function(params) {
+                //         params = JSON.parse(params)
+                //         var html = `${params.jumlah_beban_harian + params.jumlah_beban_mingguan + params.jumlah_beban_laporan_akhir} Jam`
+                //         console.log(params);
+
+                //         return html
+                //     }
+                // },
                 {
-                    data: 'action',
-                    name: 'action',
+                    data: 'link_dokumen',
+                    name: 'link_dokumen',
                     searchable: true,
                     orderable: true,
-                    render: function(params) {
-                        params = JSON.parse(params)
-                        var html = `${params.jumlah_beban_harian + params.jumlah_beban_mingguan + params.jumlah_beban_laporan_akhir} Jam`
-                        console.log(params);
-
-                        return html
+                    render:function(row){
+                        if(row){
+                            return `<x-button.button-link  text="Download" class="btn-success" link="{{ url('') }}/${row}" />`;
+                        }
                     }
                 },
                 {

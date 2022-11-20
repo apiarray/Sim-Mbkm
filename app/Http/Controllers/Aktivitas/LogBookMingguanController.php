@@ -173,6 +173,9 @@ class LogBookMingguanController extends Controller
         } else if ($request->status == 'revisi') {
             $dataLogbookMingguan->id_log_mingguan = NULL;
         }
+        if ($request->catatan != NULL) {
+            $dataLogbookMingguan->catatan = $request->catatan;
+        }
 
         $dataLogbookMingguan->status = $request->status;
         $dataLogbookMingguan->save();

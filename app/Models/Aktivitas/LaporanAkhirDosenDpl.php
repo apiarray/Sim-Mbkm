@@ -25,6 +25,7 @@ class LaporanAkhirDosenDpl extends Model
             DB::raw('(SELECT SUM(beban_jam_log_harian) from laporan_akhir_dosen_dpl_detail as b where b.laporan_akhir_dosen_dpl_id = laporan_akhir_dosen_dpl.id) as jumlah_beban_harian'),
             DB::raw('(SELECT SUM(beban_jam_log_mingguan) from laporan_akhir_dosen_dpl_detail as b where b.laporan_akhir_dosen_dpl_id = laporan_akhir_dosen_dpl.id) as jumlah_beban_mingguan'),
             DB::raw('(SELECT SUM(beban_jam_laporan_akhir) from laporan_akhir_dosen_dpl_detail as b where b.laporan_akhir_dosen_dpl_id = laporan_akhir_dosen_dpl.id) as jumlah_beban_laporan_akhir'),
+            
         )
         ->leftJoin('dosen_dpl', 'dosen_dpl.id', 'laporan_akhir_dosen_dpl.dosen_dpl_id')
         ->leftJoin('tahun_ajaran', 'tahun_ajaran.id', 'laporan_akhir_dosen_dpl.tahun_ajaran_id')

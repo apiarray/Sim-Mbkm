@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html">
@@ -24,6 +25,7 @@
         } */
     </style>
 </head>
+
 <body>
     <div class="mb-3">
         <h1 class="text-center">Laporan Akhir DPL</h1>
@@ -60,29 +62,30 @@
                     <th>ID Penilaian</th>
                     <th>Tanggal Penilaian</th>
                     <th>NIM - Mahasiswa</th>
-                    <th>Log Book Harian</th>
                     <th>Beban Jam</th>
+                    <!-- <th>Beban Jam</th>
                     <th>Log Book Mingguan</th>
                     <th>Beban Jam</th>
                     <th>Laporan Akhir</th>
-                    <th>Beban Jam</th>
+                    <th>Beban Jam</th> -->
                 </tr>
             </thead>
             @foreach($dataLaporanAkhirDetail as $dtl)
-                <tr>
-                    <td style="text-align: left;">{{ $dtl->id_registrasi }}</td>
-                    <td style="text-align: left;">{{ $dtl->id_penilaian }}</td>
-                    <td style="text-align: left;">{{ $dtl->tanggal_penilaian }}</td>
-                    <td style="text-align: left;">{{ $dtl->nim_mahasiswa }} - {{ $dtl->nama_mahasiswa }}</td>
-                    <td style="text-align: right;">{{ $dtl->count_logbook_harian }}</td>
-                    <td style="text-align: right;">{{ $dtl->beban_jam_log_harian }}</td>
-                    <td style="text-align: right;">{{ $dtl->count_logbook_mingguan }}</td>
-                    <td style="text-align: right;">{{ $dtl->beban_jam_log_mingguan }}</td>
-                    <td style="text-align: left;">{{ $dtl->id_laporan_akhir_mahasiswa }}</td>
-                    <td style="text-align: right;">{{ $dtl->beban_jam_laporan_akhir }}</td>
-                </tr>
+            <tr>
+                <td style="text-align: left;">{{ $dtl->id_registrasi }}</td>
+                <td style="text-align: left;">{{ $dtl->id_penilaian }}</td>
+                <td style="text-align: left;">{{ $dtl->tanggal_penilaian }}</td>
+                <td style="text-align: left;">{{ $dtl->nim_mahasiswa }} - {{ $dtl->nama_mahasiswa }}</td>
+                <td style="text-align: right;">{{ $dtl->count_logbook_harian }}</td>
+                <!-- <td style="text-align: right;">{{ $dtl->beban_jam_log_harian }}</td>
+                <td style="text-align: right;">{{ $dtl->count_logbook_mingguan }}</td>
+                <td style="text-align: right;">{{ $dtl->beban_jam_log_mingguan }}</td>
+                <td style="text-align: left;">{{ $dtl->id_laporan_akhir_mahasiswa }}</td>
+                <td style="text-align: right;">{{ $dtl->beban_jam_laporan_akhir }}</td> -->
+            </tr>
             @endforeach
         </table>
     </div>
 </body>
+
 </html>

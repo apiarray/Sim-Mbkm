@@ -8,6 +8,9 @@ use App\Dao\Pengguna\DosenDplDao;
 use App\Dao\Pengguna\RegistrasiDao;
 use App\Http\Controllers\Controller;
 use App\Models\Aktivitas\RegistrasiMbkm;
+use App\Models\Masters\Fakultas;
+use App\Models\Masters\Jurusan;
+use App\Models\Masters\Kelas;
 use App\Models\Masters\Program;
 use App\Models\Masters\TahunAjaran;
 use Illuminate\Http\Request;
@@ -33,6 +36,9 @@ class RegistrasiMbkmController extends Controller
     public function index()
     {
         $listTahunAjaran = TahunAjaran::getListTahunAjaran();
+        $listKelas = Kelas::select('id', 'nama')->get();
+        $listJurusan = Jurusan::getListJurusan();
+        // $listKelas = Kelas::getListKelas();
         $listProgram = Program::select('id', 'nama')->get();
         $dataDosenDpl = $this->dosenDplDao->getAll();
         $dataKelas = $this->kelasDao->getAll();
@@ -41,6 +47,8 @@ class RegistrasiMbkmController extends Controller
             'dataKelas' => $dataKelas->data,
             'listTahunAjaran' => $listTahunAjaran,
             'listProgram' => $listProgram,
+            'listKelas' => $listKelas,
+            'listJurusan' => $listJurusan,
         ]);
     }
 
@@ -58,6 +66,15 @@ class RegistrasiMbkmController extends Controller
 
         if ($request->program_id) {
             $data = $data->where('program_id', $request->program_id);
+        }
+        if ($request->kelas_id) {
+            $data = $data->where('kelas_id', $request->kelas_id);
+        }
+        if ($request->jurusan_id) {
+            $data = $data->where('jurusan_id', $request->jurusan_id);
+        }
+        if ($request->fakultas_id) {
+            $data = $data->where('fakultas_id', $request->fakultas_id);
         }
 
         if ($request->is_accepted) {
@@ -95,6 +112,9 @@ class RegistrasiMbkmController extends Controller
         $data = $data->addSelect(DB::raw("(SELECT tanggal_penilaian from penilaian_dosen_dpl where penilaian_dosen_dpl.registrasi_mbkm_id = registrasi_mbkm.id order by penilaian_dosen_dpl.tanggal_penilaian and penilaian_dosen_dpl.status = 'tervalidasi' DESC Limit 1) as tanggal_penilaian"));
         $data = $data->addSelect(DB::raw("(SELECT count(*) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as count_logbook_harian"));
         $data = $data->addSelect(DB::raw("(SELECT count(*) from logbook_mingguan where logbook_mingguan.registrasi_mbkm_id = registrasi_mbkm.id and logbook_mingguan.status = 'tervalidasi') as count_logbook_mingguan"));
+
+        $data = $data->addSelect(DB::raw("(select sum(durasi) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as jumlah_jam_logbook_harian"));
+
         $data = $data->addSelect(DB::raw("(SELECT id_laporan_akhir_mahasiswa from laporan_akhir_mahasiswa where laporan_akhir_mahasiswa.registrasi_mbkm_id = registrasi_mbkm.id order by laporan_akhir_mahasiswa.tanggal_laporan_akhir and laporan_akhir_mahasiswa.status_laporan_akhir = 'validasi' DESC Limit 1) as id_laporan_akhir_mahasiswa"));
 
         if ($request->tahun_ajaran_id) {
@@ -109,6 +129,8 @@ class RegistrasiMbkmController extends Controller
         if ($request->program_id) {
             $data = $data->where('program_id', $request->program_id);
         }
+
+
         if ($request->is_accepted) {
             $data = $data->where('is_accepted', $request->is_accepted);
         }
@@ -311,6 +333,6 @@ class RegistrasiMbkmController extends Controller
             }
             $rg->save();
         }
-        return redirect()->back()->with('message', 'Upload successfully');
+        return redirect('dashboard/aktivitas/registrasi-mbkm')->with('message', 'Upload successfully');
     }
 }

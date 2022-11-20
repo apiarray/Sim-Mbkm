@@ -38,7 +38,6 @@ class LaporanAkhirMahasiswaController extends Controller
     {
         $data = LaporanAkhirMahasiswa::listLaporanAkhirMahasiswa(1);
         $data = $data->where('registrasi_mbkm_id', $registrasi_mbkm_id);
-        // $data = $data->where('status_laporan_akhir', 'validasi');
         $data = $data->orderBy('tanggal_laporan_akhir', 'DESC');
         $data = $data->orderBy('laporan_akhir_mahasiswa.created_at', 'DESC');
         $data = $data->first();

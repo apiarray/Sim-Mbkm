@@ -43,7 +43,10 @@ class PenilaianDosenDpl extends Model
             'jurusan.nama as jurusan_nama',
             'dosen_dpl.nama as dosen_dpl_nama',
             'program.nama as program_nama',
+            
             'tahun_ajaran.tahun_ajaran',
+            //raw beban jam//
+            DB::raw("(select sum(durasi) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as jumlah_jam_logbook_harian"),
             //harian
             DB::raw("(SELECT COUNT(*) FROM logbook_harian where logbook_harian.registrasi_mbkm_id = penilaian_dosen_dpl.registrasi_mbkm_id) as count_logbook_harian_all"),
             DB::raw("(SELECT COUNT(*) FROM logbook_harian where logbook_harian.registrasi_mbkm_id = penilaian_dosen_dpl.registrasi_mbkm_id AND 

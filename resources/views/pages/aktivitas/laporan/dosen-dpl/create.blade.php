@@ -11,7 +11,7 @@
 @endif
 
 
-<x-cards.regular-card heading="Insert Laporan Akhir DPL">
+<x-cards.regular-card heading=" Laporan Akhir DPL">
     @if (count($errors) > 0)
     <div class="alert alert-danger">
         <ul>
@@ -21,7 +21,7 @@
         </ul>
     </div>
     @endif
-    <form action="{{ route('aktivitas.laporan_akhir.dosen_dpl.store') }}" method="post" autocomplete="off">
+    <form action="{{ route('aktivitas.laporan_akhir.dosen_dpl.store') }}" method="post" autocomplete="off" enctype="multipart/form-data">
         @csrf
         @method('POST')
         <div class="form-group row">
@@ -57,30 +57,20 @@
             </div>
         </div>
         <div class="form-group row">
-            <div class="col-sm-12">Rincian Laporan Akhir</div>
-            <div class="col-sm-12">
+            <div>
                 <div class="row">
                     <div class="col table-responsive">
                         <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID Validasi Registrasi</th>
-                                    <th>ID Penilaian</th>
-                                    <th>Tanggal Penilaian</th>
-                                    <th>NIM - Mahasiswa</th>
-                                    <th>Log Book Harian</th>
-                                    <th>Beban Jam</th>
-                                    <th>Log Book Mingguan</th>
-                                    <th>Beban Jam</th>
-                                    <th>Laporan Akhir</th>
-                                    <th>Beban Jam</th>
-
-                                </tr>
-                            </thead>
                             <tbody id="rincian-laporan-akhir"></tbody>
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col">
+                <label>Upload Dokumen</label>
+                <input type="file" class="form-control" name="link_dokumen" placeholder="Upload Dokumen">
             </div>
         </div>
         <div class="form-group row">
@@ -127,38 +117,11 @@
                     if (resp.length > 0) {
                         for (let i in resp) {
                             htmlTable += `<tr>
-                                <td>
-                                    ${resp[i].id_registrasi}
-                                </td>
-                                <td>
-                                    ${resp[i].id_penilaian}
-                                </td>
-                                <td>
-                                    ${resp[i].tanggal_penilaian}
-                                </td>
-                                <td>
-                                    ${resp[i].nim_mahasiswa} - ${resp[i].nama_mahasiswa}
-                                </td>
-                                <td>
-                                    ${resp[i].count_logbook_harian}
-                                </td>
+
                                 <td>
                                     <input class="form-control" type="hidden" required name="registrasi_mbkm_id[]" value="${resp[i].id}">
-                                    <input class="form-control" type="number" required name="beban_jam_log_harian[]" min=0>
+                                    <input class="form-control" type="hidden" name="beban_jam_log_harian[]" value="${resp[i].jumlah_jam_logbook_harian}">
                                 </td>
-                                <td>
-                                    ${resp[i].count_logbook_mingguan}
-                                </td>
-                                <td>
-                                    <input class="form-control" type="number" required name="beban_jam_log_mingguan[]" min=0>
-                                </td>
-                                <td>
-                                    ${resp[i].id_laporan_akhir_mahasiswa}
-                                </td>
-                                <td>
-                                    <input class="form-control" type="number" required name="beban_jam_laporan_akhir[]" min=0>
-                                </td>
-
                             </tr>`
                         }
                     } else {

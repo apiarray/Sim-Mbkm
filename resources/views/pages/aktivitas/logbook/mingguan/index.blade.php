@@ -35,6 +35,7 @@
                         <th scope="row">Status Log Book Mingguan</th>
                         <th scope="row">Berkas</th>
                         <th scope="row">Action</th>
+                        <th scope="row">Catatan</th>
                     </tr>
                 </x-slot>
                 <x-slot name="body">
@@ -146,7 +147,7 @@
                         } else if (params.status == 'dalam_proses') {
                                     if(hak_akses == 'Mahasiswa'){
                                         html += '<span class="badge bg-info">Readonly</span>';}
-                                        else{
+                                        else if (params.catatan == null && (hak_akses == 'Dosen' || hak_akses == 'Admin')) {
                                             html += `<x-button text="Proses Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
                             html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" formLink="{{ url('dashboard/aktivitas/logbook/mingguan/validate') }}/${params.id}" >
                     <slot>
@@ -157,8 +158,32 @@
                                 <option value="revisi">Revisi</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="catatan">Catatan</label>
+                            <textarea name="catatan" id="catatan" rows="3" class="form-control"></textarea>
+                        </div>
+
                     </slot>
                     </x-modal.modal-confirm>`
+                                        }else if(params.catatan != null && (hak_akses == 'Admin' || hak_akses == 'Dosen')){
+                                            html += `<x-button text="Proses Validasi" class="btn-info" modalTarget="#modal-confirm-proses-validasi-${params.id}" />`;
+                            html += `<x-modal.modal-confirm modalId="modal-confirm-proses-validasi-${params.id}" title="Proses Validasi" formLink="{{ url('dashboard/aktivitas/logbook/mingguan/validate') }}/${params.id}" >
+                    <slot>
+                        <div class="form-group">
+                            <select name="status" required>
+                                <option value="">-- Pilih Status --</option>
+                                <option value="tervalidasi">Valid</option>
+                                <option value="revisi">Revisi</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="catatan">Catatan</label>
+                            <textarea name="catatan" id="catatan" rows="3" class="form-control">${params.catatan}</textarea>
+                        </div>
+
+                    </slot>
+                    </x-modal.modal-confirm>`
+
                                         }
 
                         } else if (params.status == 'mengajukan' && hak_akses == 'Admin' ) {
@@ -259,6 +284,12 @@ else if(hak_akses == 'Mahasiswa' && params.status == 'revisi' ){
                         }
                         return html
                     }
+                },
+                {
+                    data: 'catatan',
+                    name: 'catatan',
+                    searchable: false,
+                    orderable: false,
                 }
             ]
         });

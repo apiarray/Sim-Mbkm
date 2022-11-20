@@ -11,7 +11,7 @@
     @endif
 
 
-    <x-cards.regular-card heading="Insert Laporan Akhir">
+    <x-cards.regular-card heading="New Laporan Akhir">
         @if (count($errors) > 0)
             <div class="alert alert-danger">
                 <ul>
@@ -237,13 +237,14 @@
                             $.each(res, function(index, value) {
                                 index += 1;
                                 html_log_book += '<div class="col">';
-                                html_log_book += '<input class="form-check-input" type="checkbox" id="gridCheck' + index + '" name="id_logbook_mingguan[]" value="' + value.id + '">';
+                                html_log_book += '<input class="form-check-input" type="checkbox" id="gridCheck' + index + '" name="id_logbook_mingguan[]" value="' + value.id + '" checked>';
                                 html_log_book += '<label class="form-check-label" for="gridCheck' + index + '">';
                                 html_log_book += '' + value.judul + '';
                                 html_log_book += '</label>';
                                 html_log_book += '</div>';
+                                
                             });
-
+                            html_log_book += '<span class="text-danger">*Logbook yang sudah diverifikasi tidak dapat diubah</span>';
                             $('.id-log-book-minguaan').html(html_log_book);
                             $('#button_submit').prop('disabled', false)
                         } else {

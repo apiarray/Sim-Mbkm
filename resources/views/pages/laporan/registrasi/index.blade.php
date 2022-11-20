@@ -42,6 +42,18 @@
                         </div>
                     </div>
                     <div class="col-md-4">
+                    <div class="form-group">
+                    <label for="jurusan">Fakultas / Jurusan</label>
+                            <select class="form-control" name="jurusan" id="jurusan">
+                                <option value="">Semua</option>
+                                @foreach ($listJurusan as $x)
+                                    <option value="{{ $x->id }}" @if (request('jurusan') == $x->id) selected @endif>{{ $x->nama .' - ' . $x->fakultas }}</option>
+                                @endforeach
+                            </select>
+                    </div>
+
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="status_validasi">Status Validasi</label>
                             <select class="form-control" name="status_validasi" id="status_validasi">
@@ -94,6 +106,7 @@
         var param_tahun_ajaran = "{{ request('tahun_ajaran') }}";
         var param_status_validasi = "{{ request('status_validasi') }}";
         var param_program = "{{ request('program') }}";
+        var param_jurusan = "{{ request('jurusan') }}";
         $('#registrasi-datatables').DataTable({
             processing: true,
             serverSide: true,
@@ -102,11 +115,16 @@
                     extend: 'pdfHtml5',
                     text: 'Export PDF',
                     orientation: 'landscape',
-                    pageSize: 'LEGAL'
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+                    }
                 },
                 {
-                    extend: 'excel',
-                    text: 'Export Excel',
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12],
+                    }
                 }
             ],
             ajax: {
@@ -115,6 +133,7 @@
                     tahun_ajaran_id: param_tahun_ajaran,
                     status_validasi: param_status_validasi,
                     program_id: param_program,
+                    jurusan_id: param_jurusan,
                 },
             },
             columns: [{

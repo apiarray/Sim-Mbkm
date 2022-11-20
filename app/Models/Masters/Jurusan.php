@@ -23,6 +23,17 @@ class Jurusan extends Model
         return $this->belongsTo(Fakultas::class, 'fakultas_id', 'id');
     }
 
+    public static function getListJurusan()
+    {
+        $result = self::select('jurusan.id', 'jurusan.nama', 'jurusan.kode', 'fakultas.nama as fakultas')
+            ->leftjoin('fakultas', 'fakultas.id', 'jurusan.fakultas_id')
+            // ->leftjoin('kelas', 'kelas.jurusan_id', 'jurusan.id')
+            ->orderby('fakultas.nama', 'ASC')
+            ->get();
+
+        return $result;
+    }
+
     public function kelas()
     {
         return $this->hasMany(Kelas::class, 'id', 'jurusan_id');

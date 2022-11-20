@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Fakultas extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $table = 'fakultas';
     protected $timestamp = true;
     protected $fillable = [
@@ -17,6 +17,8 @@ class Fakultas extends Model
         'kode',
         'jenjang_id'
     ];
+
+
 
     public function jenjang()
     {

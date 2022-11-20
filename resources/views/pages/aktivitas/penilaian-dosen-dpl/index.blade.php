@@ -11,9 +11,55 @@
     @endif
 
     <section class="mt-5">
+
+    <x-cards.regular-card heading="Filter">
+<form action="" method="get">
+    <div class="row">
+
+
+
+<!-- end fakultas -->
+<!-- jurusan stard  -->
+<div class="col-md-4">
+        <div class="form-group">
+        <label for="jurusan">Fakultas / Jurusan</label>
+                <select class="form-control" name="jurusan" id="jurusan">
+                    <option value="">Semua</option>
+                    @foreach ($listJurusan as $x)
+                        <option value="{{ $x->id }}" @if (request('jurusan') == $x->id) selected @endif>{{ $x->nama .' - ' . $x->fakultas }}</option>
+                    @endforeach
+                </select>
+        </div>
+
+        </div>
+
+<!-- endjurusan -->
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="program">Program</label>
+                <select class="form-control" name="program" id="program">
+                    <option value="">Semua</option>
+                    @foreach ($listProgram as $x)
+                        <option value="{{ $x->id }}" @if (request('program') == $x->id) selected @endif>{{ $x->nama }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+     
+    </div>
+    <div class="row">
+        <div class="col">
+            <button type="submit" class="btn btn-success"><i class="fa fa-search"></i> Search</button>
+            <a type="button" class="btn btn-primary" href="{{ route('aktivitas.penilaian_dosen_dpl.index') }}"><i class="fa fa-refresh"></i> Reset</a>
+        </div>
+    </div>
+</form>
+</x-cards.regular-card>
+
+
         <x-cards.regular-card heading="Penilaian DPL">
             @if (!auth()->guard('mahasiswa')->check())
-                <x-button.button-link text="Add Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
+                <x-button.button-link text="New Penilaian" class="btn-success mb-4" link="{{ route('aktivitas.penilaian_dosen_dpl.create') }}" />
             @endif
             <x-table id="logbook-datatables">
                 <x-slot name="header">
@@ -34,6 +80,7 @@
                             <th scope="row">Program</th>
                         @endif
                         <th scope="row">Tahun Ajaran</th>
+                        <th scope="row">Total Jam</th>
                         <th scope="row">Logbook Harian</th>
                         <th scope="row">Logbook Mingguan</th>
                         <th scope="row">Laporan Akhir</th>
@@ -69,11 +116,36 @@
         @elseif (auth()->guard('admin')->check())
             let hak_akses = 'Admin';
         @endif
+
+
+
+        var param_program = "{{ request('program') }}";
+        var param_jurusan = "{{ request('jurusan') }}";
+
         $('#logbook-datatables').DataTable({
+            
             processing: true,
             serverSide: true,
+
+            dom: 'Bfrtip',
+            buttons: [{
+                    extend: 'pdfHtml5',
+                    text: 'Export PDF',
+                    orientation: 'landscape',
+                    pageSize: 'LEGAL',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14,16],
+                    }
+                },
+            ],
+
+
             ajax: {
                 url: '{!! url('dashboard/aktivitas/penilaian-dosen-dpl/list-datatable') !!}',
+                data: {
+                    program_id: param_program,
+                    jurusan_id: param_jurusan,
+                },
             },
             columns: [{
                     data: 'DT_RowIndex',
@@ -136,6 +208,17 @@
                     name: 'tahun_ajaran.tahun_ajaran',
                     searchable: true,
                     orderable: true
+                },
+                {
+                    data: 'action',
+                    name: 'action',
+                    searchable: false,
+                    orderable: false, // LOGBOOK harian
+                    render: function(params) {
+                        params = JSON.parse(params)
+                        var html = `${params.jumlah_jam_logbook_harian} Jam`
+                        return html
+                    }
                 },
                 {
                     data: 'action',

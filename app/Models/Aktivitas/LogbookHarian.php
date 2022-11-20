@@ -51,7 +51,8 @@ class LogbookHarian extends Model
             'jurusan.nama as jurusan_nama',
             'dosen_dpl.nama as dosen_dpl_nama',
             'program.nama as program_nama',
-            'tahun_ajaran.tahun_ajaran'
+            'tahun_ajaran.tahun_ajaran',
+            DB::raw("(select sum(durasi) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as jumlah_jam_logbook_harian"),
         )
             ->leftJoin('registrasi_mbkm', 'registrasi_mbkm.id', 'logbook_harian.registrasi_mbkm_id')
             ->leftJoin('mahasiswa', 'mahasiswa.id', 'registrasi_mbkm.mahasiswa_id')

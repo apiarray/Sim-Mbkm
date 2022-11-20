@@ -20,4 +20,15 @@ class Kelas extends Model
     {
         return $this->belongsTo(Jurusan::class, 'jurusan_id', 'id');
     }
+
+
+    public static function getListKelas()
+    {
+        $result = self::select('kelas.id', 'kelas.nama', 'jurusan.nama as jurusan')
+            ->leftjoin('jurusan', 'jurusan.id', 'kelas.jurusan_id')
+            ->orderby('kelas.nama', 'ASC')
+            ->get();
+
+        return $result;
+    }
 }

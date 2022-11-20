@@ -60,15 +60,20 @@
                 </tr>
             </table>
             <br>
-            <h6>Daftar Logbook Harian</h6>
-            <div id="div_logbook_harian" class="flex-grow-1 mr-3"></div>
+            <table>
+                <tr>
+                    <th>Total Jam</th>
+                    <td>: <span id="div_logbook_harian"></span></td>
+
+                </tr>
+            </table>
             <br>
             <br>
-            <h6>Daftar Logbook Mingguan</h6>
+            <!-- <h6>Daftar Logbook Mingguan</h6>
             <div id="div_logbook_mingguan" class="flex-grow-1 mr-3"></div>
             <br>
             <h6>Laporan Akhir Mahasiswa</h6>
-            <div id="div_laporan_akhir" class="flex-grow-1 mr-3"></div>
+            <div id="div_laporan_akhir" class="flex-grow-1 mr-3"></div> -->
         </div>
 
         <div class="d-flex flex-row">
@@ -144,19 +149,17 @@
                     console.log(resp);
                     console.log('success get data... logbook harian');
                     let htmlTable = ''
+                    htmlTable += `<td>${resp.jumlah_jam_logbook_harian}</td>`
+
                     if (resp && resp.length > 0) {
                         htmlTable += '<table class="table w-100 mb-3"><tr><th>Item Penilaian</th><th>Status</th><th>Action</th></tr>';
                         for (var i in resp) {
                             console.log(resp[i]);
 
                             htmlTable += '<tr>'
-                            htmlTable += `<td>${resp[i].judul}</td>`
-                            if (resp[i].status == 'tervalidasi') {
-                                htmlTable += `<td><span class="badge badge-success">${resp[i].status}</span></td>`
-                            } else {
-                                htmlTable += `<td><span class="badge badge-warning">${resp[i].status}</span></td>`
-                            }
-                            htmlTable += `<td><a href="{{ url('dashboard/aktivitas/logbook/harian/detail') }}/${resp[i].id}" target="_BLANK" class="btn btn-info">Lihat</a></td>`
+                            htmlTable += `<td>${resp[i].jumlah_jam_logbook_harian}</td>`
+                            htmlTable += `<td>               JAM</td>`
+
                             htmlTable += '</tr>'
                         }
                         htmlTable += '</table>'

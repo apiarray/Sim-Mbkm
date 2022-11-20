@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\Return_;
 use PHPUnit\Framework\MockObject\Stub\ReturnSelf;
 use Yajra\DataTables\Facades\DataTables;
+use App\Models\Masters\Jurusan;
+use App\Models\Masters\Kelas;
+use App\Models\Masters\Program;
 
 class PenilaianDosenDplController extends Controller
 {
@@ -26,12 +29,24 @@ class PenilaianDosenDplController extends Controller
      */
     public function index()
     {
-        return view('pages.aktivitas.penilaian-dosen-dpl.index');
+        $listJurusan = Jurusan::getListJurusan();
+        $listProgram = Program::select('id', 'nama')->get();
+        return view('pages.aktivitas.penilaian-dosen-dpl.index', [
+            'listProgram' => $listProgram,
+            'listJurusan' => $listJurusan,
+        ]);
     }
 
     public function listPenilaianDosenDpl(Request $request)
     {
         $data = PenilaianDosenDpl::listPenilaianDosenDpl(1);
+
+        if ($request->program_id) {
+            $data = $data->where('program_id', $request->program_id);
+        }
+        if ($request->jurusan_id) {
+            $data = $data->where('jurusan_id', $request->jurusan_id);
+        }
 
         return DataTables::of($data)
             ->addIndexColumn()

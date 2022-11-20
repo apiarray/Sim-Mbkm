@@ -10,7 +10,7 @@
         <x-alert type="danger" title="Error" message="{{ session()->get('error') }}" />
     @endif
 
-    <x-cards.regular-card heading="Insert New Logbook Harian">
+    <x-cards.regular-card heading=" New Logbook Harian">
         <form action="{{ route('aktivitas.logbook.harian.store') }}" method="POST" autocomplete="off" enctype="multipart/form-data">
             @csrf
             @method('POST')

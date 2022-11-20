@@ -13,7 +13,7 @@
     <section class="mt-5">
         <x-cards.regular-card heading="Laporan Akhir Mahasiswa">
             @if (!auth()->guard('dosen')->check())
-                <x-button.button-link text="New Laporan Akhir" class="btn-success mb-4" link="{{ route('aktivitas.laporan_akhir.mahasiswa.create') }}" />
+                <x-button.button-link text=" Laporan Akhir" class="btn-success mb-4" link="{{ route('aktivitas.laporan_akhir.mahasiswa.create') }}" />
             @endif
             <x-table id="logbook-datatables">
                 <x-slot name="header">
@@ -34,7 +34,7 @@
                         <th scope="row">Tahun Ajaran</th>
                         <th scope="row">Deskripsi</th>
                         <th scope="row">Status Laporan Akhir</th>
-                        <th scope="row">Dokumen</th>
+                        <th scope="row">Berkas</th>
                         <th scope="row">Link Youtube</th>
                         <th scope="row">Action</th>
                     </tr>

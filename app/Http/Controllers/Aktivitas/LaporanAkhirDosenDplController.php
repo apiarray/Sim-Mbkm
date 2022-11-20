@@ -66,23 +66,26 @@ class LaporanAkhirDosenDplController extends Controller
             'registrasi_mbkm_id' => 'required|array',
             'registrasi_mbkm_id.*' => 'required|exists:registrasi_mbkm,id',
             'beban_jam_log_harian' => 'required|array',
-            'beban_jam_log_harian.*' => 'required|numeric|min:0',
-            'beban_jam_log_mingguan' => 'required|array',
-            'beban_jam_log_mingguan.*' => 'required|numeric|min:0',
-            'beban_jam_laporan_akhir' => 'required|array',
-            'beban_jam_laporan_akhir.*' => 'required|numeric|min:0',
+            // 'beban_jam_log_harian.*' => 'required|numeric|min:0',
+            // 'beban_jam_log_mingguan' => 'required|array',
+            // 'beban_jam_log_mingguan.*' => 'required|numeric|min:0',
+            // 'beban_jam_laporan_akhir' => 'required|array',
+            // 'beban_jam_laporan_akhir.*' => 'required|numeric|min:0',
+            'link_dokumen' => 'nullable|file|mimetypes:application/pdf|max:5120',
         ]);
 
         if (
-            (count($request->beban_jam_log_harian) != count($request->registrasi_mbkm_id)) ||
-            (count($request->beban_jam_log_mingguan) != count($request->registrasi_mbkm_id)) ||
-            (count($request->beban_jam_laporan_akhir) != count($request->registrasi_mbkm_id)) ||
-            (count($request->beban_jam_log_harian) != count($request->beban_jam_log_mingguan)) ||
-            (count($request->beban_jam_log_mingguan) != count($request->beban_jam_laporan_akhir)) ||
-            (count($request->beban_jam_log_harian) != count($request->beban_jam_laporan_akhir))
+            (count($request->beban_jam_log_harian) != count($request->registrasi_mbkm_id))
+            // // (count($request->beban_jam_log_mingguan) != count($request->registrasi_mbkm_id)) ||
+            // // (count($request->beban_jam_laporan_akhir) != count($request->registrasi_mbkm_id)) ||
+            // (count($request->beban_jam_log_harian) != count($request->beban_jam_log_mingguan)) ||
+            // (count($request->beban_jam_log_mingguan) != count($request->beban_jam_laporan_akhir)) ||
+            // (count($request->beban_jam_log_harian) != count($request->beban_jam_laporan_akhir))
         ) {
             return redirect()->back()->withInput()->with('error', 'Data rincian laporan akhir tidak valid!');
         }
+
+
 
         DB::beginTransaction();
         $lapAkhir = new LaporanAkhirDosenDpl;
@@ -90,15 +93,17 @@ class LaporanAkhirDosenDplController extends Controller
         $lapAkhir->dosen_dpl_id                 = $request->dosen_dpl_id;
         $lapAkhir->tahun_ajaran_id              = $request->tahun_ajaran_id;
         $lapAkhir->tanggal_laporan_akhir        = $request->tanggal_laporan;
+        if ($files = $request->file('link_dokumen')) {
+            $lapAkhir->link_dokumen = $files->move('storage/dokumen/2022/',  date('YmdHis') . '.' . $files->getClientOriginalExtension());
+        }
         $lapAkhir->save();
+
 
         foreach ($request->registrasi_mbkm_id as $idx => $idReg) {
             $lapAkhirDetail = new LaporanAkhirDosenDplDetail;
             $lapAkhirDetail->laporan_akhir_dosen_dpl_id = $lapAkhir->id;
             $lapAkhirDetail->registrasi_mbkm_id = $idReg;
             $lapAkhirDetail->beban_jam_log_harian = $request->beban_jam_log_harian[$idx] ?? 0;
-            $lapAkhirDetail->beban_jam_log_mingguan = $request->beban_jam_log_mingguan[$idx] ?? 0;
-            $lapAkhirDetail->beban_jam_laporan_akhir = $request->beban_jam_laporan_akhir[$idx] ?? 0;
             $lapAkhirDetail->save();
         }
 
@@ -135,6 +140,7 @@ class LaporanAkhirDosenDplController extends Controller
             'mahasiswa.nim as nim_mahasiswa',
             DB::raw("(SELECT count(*) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as count_logbook_harian"),
             DB::raw("(SELECT count(*) from logbook_mingguan where logbook_mingguan.registrasi_mbkm_id = registrasi_mbkm.id and logbook_mingguan.status = 'tervalidasi') as count_logbook_mingguan"),
+            // DB::raw("(select sum(durasi) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as jumlah_jam_logbook_harian"),
             DB::raw("(SELECT id_laporan_akhir_mahasiswa from laporan_akhir_mahasiswa where laporan_akhir_mahasiswa.registrasi_mbkm_id = registrasi_mbkm.id order by laporan_akhir_mahasiswa.tanggal_laporan_akhir and laporan_akhir_mahasiswa.status_laporan_akhir = 'validasi' DESC Limit 1) as id_laporan_akhir_mahasiswa")
         )
             ->join('registrasi_mbkm', 'registrasi_mbkm.id', 'laporan_akhir_dosen_dpl_detail.registrasi_mbkm_id')
@@ -172,7 +178,9 @@ class LaporanAkhirDosenDplController extends Controller
             'mahasiswa.nama as nama_mahasiswa',
             'mahasiswa.nim as nim_mahasiswa',
             DB::raw("(SELECT count(*) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as count_logbook_harian"),
+            DB::raw("(select sum(durasi) from logbook_harian where logbook_harian.registrasi_mbkm_id = registrasi_mbkm.id and logbook_harian.status = 'tervalidasi') as jumlah_jam_logbook_harian"),
             DB::raw("(SELECT count(*) from logbook_mingguan where logbook_mingguan.registrasi_mbkm_id = registrasi_mbkm.id and logbook_mingguan.status = 'tervalidasi') as count_logbook_mingguan"),
+
             DB::raw("(SELECT id_laporan_akhir_mahasiswa from laporan_akhir_mahasiswa where laporan_akhir_mahasiswa.registrasi_mbkm_id = registrasi_mbkm.id order by laporan_akhir_mahasiswa.tanggal_laporan_akhir and laporan_akhir_mahasiswa.status_laporan_akhir = 'validasi' DESC Limit 1) as id_laporan_akhir_mahasiswa")
         )
             ->join('registrasi_mbkm', 'registrasi_mbkm.id', 'laporan_akhir_dosen_dpl_detail.registrasi_mbkm_id')
@@ -217,6 +225,7 @@ class LaporanAkhirDosenDplController extends Controller
             'beban_jam_log_mingguan.*' => 'required|numeric|min:0',
             'beban_jam_laporan_akhir' => 'required|array',
             'beban_jam_laporan_akhir.*' => 'required|numeric|min:0',
+            'link_dokumen' => 'nullable|file|mimetypes:application/pdf|max:5120',
         ]);
 
         if (
@@ -236,6 +245,10 @@ class LaporanAkhirDosenDplController extends Controller
         $lapAkhir->dosen_dpl_id                 = $request->dosen_dpl_id;
         $lapAkhir->tahun_ajaran_id              = $request->tahun_ajaran_id;
         $lapAkhir->tanggal_laporan_akhir        = $request->tanggal_laporan;
+
+        if ($files = $request->file('link_dokumen')) {
+            $lapAkhir->link_dokumen = $files->move('storage/dokumen/2022/',  date('YmdHis') . '.' . $files->getClientOriginalExtension());
+        }
         $lapAkhir->save();
 
         $oldDetail = LaporanAkhirDosenDplDetail::where('laporan_akhir_dosen_dpl_id', $id)->get();

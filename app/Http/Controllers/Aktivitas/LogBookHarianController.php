@@ -162,6 +162,9 @@ class LogBookHarianController extends Controller
             $dataLogbookHarian->id_log_harian = NULL;
         }
 
+        if ($request->catatan != NULL) {
+            $dataLogbookHarian->catatan = $request->catatan;
+        }
         $dataLogbookHarian->status = $request->status;
         $dataLogbookHarian->save();
 
